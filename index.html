@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Games</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            padding: 20px;
+            background-color: #2c2c2c;
+        }
+        h1 {
+            margin: 0;
+        }
+        #searchBar {
+            margin: 20px auto;
+            padding: 10px;
+            width: 50%;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        #gameList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .game {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .game:hover {
+            transform: scale(1.05);
+        }
+        #gameContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        #gameFrame {
+            flex-grow: 1;
+            width: 100%;
+            border: none;
+        }
+        #closeBtn, #fullscreenBtn {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        #controls {
+            background-color: #111;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Game Hub</h1>
+    </header>
+
+    <input type="text" id="searchBar" placeholder="Search games...">
+
+    <div id="gameList">
+        <div class="game" data-url="games/game1.html">Game 1</div>
+        <div class="game" data-url="games/game2.html">Game 2</div>
+        <div class="game" data-url="games/game3.html">Game 3</div>
+        <!-- Add more games here -->
+    </div>
+
+    <div id="gameContainer">
+        <div id="controls">
+            <button id="fullscreenBtn">Fullscreen</button>
+            <button id="closeBtn">Close</button>
+        </div>
+        <iframe id="gameFrame"></iframe>
+    </div>
+
+    <script>
+        const searchBar = document.getElementById('searchBar');
+        const games = document.querySelectorAll('.game');
+        const gameContainer = document.getElementById('gameContainer');
+        const gameFrame = document.getElementById('gameFrame');
+        const closeBtn = document.getElementById('closeBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // Search functionality
+        searchBar.addEventListener('input', () => {
+            const filter = searchBar.value.toLowerCase();
+            games.forEach(game => {
+                const text = game.textContent.toLowerCase();
+                game.style.display = text.includes(filter) ? 'block' : 'none';
+            });
+        });
+
+        // Open game
+        games.forEach(game => {
+            game.addEventListener('click', () => {
+                gameFrame.src = game.dataset.url;
+                gameContainer.style.display = 'flex';
+            });
+        });
+
+        // Close game
+        closeBtn.addEventListener('click', () => {
+            gameContainer.style.display = 'none';
+            gameFrame.src = '';
+        });
+
+        // Fullscreen functionality
+        fullscreenBtn.addEventListener('click', () => {
+            if (gameContainer.requestFullscreen) {
+                gameContainer.requestFullscreen();
+            } else if (gameContainer.webkitRequestFullscreen) { /* Safari */
+                gameContainer.webkitRequestFullscreen();
+            } else if (gameContainer.msRequestFullscreen) { /* IE11 */
+                gameContainer.msRequestFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
