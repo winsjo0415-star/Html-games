@@ -1,92 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Game Hub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Games</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       background-color: #1e1e1e;
-      color: #fff;
-      margin: 0;
-      padding: 0;
+      color: white;
+      font-family: Arial, sans-serif;
       text-align: center;
-    }
-    header {
-      padding: 20px;
-      background-color: #2c2c2c;
+      margin: 0;
     }
     h1 {
+      background-color: #2c2c2c;
       margin: 0;
+      padding: 20px;
     }
     #searchBar {
-      margin: 20px auto;
+      width: 60%;
       padding: 10px;
-      width: 50%;
+      margin: 20px;
       font-size: 16px;
       border-radius: 5px;
       border: none;
     }
-    #gameList {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
     .game {
       background-color: #333;
-      padding: 15px;
-      border-radius: 8px;
-      width: 200px;
+      display: inline-block;
+      margin: 10px;
+      padding: 20px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.2s;
+      width: 200px;
+      transition: 0.2s;
     }
     .game:hover {
-      transform: scale(1.05);
       background-color: #444;
+      transform: scale(1.05);
     }
     #gameContainer {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
-      background-color: #000;
-      z-index: 9999;
+      background: black;
+      z-index: 1000;
       flex-direction: column;
+    }
+    #controls {
+      background: #111;
+      padding: 10px;
     }
     #gameFrame {
       flex-grow: 1;
       width: 100%;
       border: none;
     }
-    #closeBtn,
-    #fullscreenBtn {
-      padding: 10px 20px;
+    button {
+      padding: 10px 15px;
       margin: 5px;
-      font-size: 16px;
-      cursor: pointer;
       border: none;
       border-radius: 5px;
-    }
-    #controls {
-      background-color: #111;
-      padding: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>My Game Hub</h1>
-  </header>
 
-  <input type="text" id="searchBar" placeholder="Search games..." />
+  <h1>My Game Hub</h1>
+  <input type="text" id="searchBar" placeholder="Search games...">
 
-  <div id="gameList"></div>
+  <!-- 🔽 Your Games Go Here -->
+  <div id="gameList">
+    <div class="game" data-url="games/snakegame.html">Snake Game</div>
+  </div>
 
+  <!-- Game Viewer -->
   <div id="gameContainer">
     <div id="controls">
       <button id="fullscreenBtn">Fullscreen</button>
@@ -96,62 +87,42 @@
   </div>
 
   <script>
-    // 👇 Add your game files here
-    const games = [
-      { name: "Snake Game", file: "snakegame.html" },
-      { name: "Pong", file: "pong.html" },
-      { name: "Chess", file: "chess.html" },
-    ];
+    const searchBar = document.getElementById('searchBar');
+    const games = document.querySelectorAll('.game');
+    const gameContainer = document.getElementById('gameContainer');
+    const gameFrame = document.getElementById('gameFrame');
+    const closeBtn = document.getElementById('closeBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-    const gameList = document.getElementById("gameList");
-    const searchBar = document.getElementById("searchBar");
-    const gameContainer = document.getElementById("gameContainer");
-    const gameFrame = document.getElementById("gameFrame");
-    const closeBtn = document.getElementById("closeBtn");
-    const fullscreenBtn = document.getElementById("fullscreenBtn");
-
-    // Create game buttons automatically
-    games.forEach(game => {
-      const div = document.createElement("div");
-      div.classList.add("game");
-      div.textContent = game.name;
-      div.dataset.url = "games/" + game.file;
-      gameList.appendChild(div);
-    });
-
-    // Search functionality
-    searchBar.addEventListener("input", () => {
-      const filter = searchBar.value.toLowerCase();
-      document.querySelectorAll(".game").forEach(game => {
-        const text = game.textContent.toLowerCase();
-        game.style.display = text.includes(filter) ? "block" : "none";
+    // Search feature
+    searchBar.addEventListener('input', () => {
+      const text = searchBar.value.toLowerCase();
+      games.forEach(game => {
+        game.style.display = game.textContent.toLowerCase().includes(text) ? 'inline-block' : 'none';
       });
     });
 
-    // Click to open game
-    document.querySelectorAll(".game").forEach(game => {
-      game.addEventListener("click", () => {
+    // Open game
+    games.forEach(game => {
+      game.addEventListener('click', () => {
         gameFrame.src = game.dataset.url;
-        gameContainer.style.display = "flex";
+        gameContainer.style.display = 'flex';
       });
     });
 
     // Close game
-    closeBtn.addEventListener("click", () => {
-      gameContainer.style.display = "none";
-      gameFrame.src = "";
+    closeBtn.addEventListener('click', () => {
+      gameContainer.style.display = 'none';
+      gameFrame.src = '';
     });
 
     // Fullscreen button
-    fullscreenBtn.addEventListener("click", () => {
+    fullscreenBtn.addEventListener('click', () => {
       if (gameContainer.requestFullscreen) {
         gameContainer.requestFullscreen();
-      } else if (gameContainer.webkitRequestFullscreen) {
-        gameContainer.webkitRequestFullscreen();
-      } else if (gameContainer.msRequestFullscreen) {
-        gameContainer.msRequestFullscreen();
       }
     });
   </script>
+
 </body>
 </html>
