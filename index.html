@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Games</title>
+  <title>My Game Hub</title>
   <style>
     body {
       background-color: #1e1e1e;
@@ -24,6 +24,7 @@
       font-size: 16px;
       border-radius: 5px;
       border: none;
+      outline: none;
     }
     .game {
       background-color: #333;
@@ -52,6 +53,9 @@
     #controls {
       background: #111;
       padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
     #gameFrame {
       flex-grow: 1;
@@ -64,6 +68,12 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      background-color: #444;
+      color: white;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #666;
     }
   </style>
 </head>
@@ -72,13 +82,15 @@
   <h1>My Game Hub</h1>
   <input type="text" id="searchBar" placeholder="Search games...">
 
-  <!-- 🔽 Your Games Go Here -->
+  <!-- 🎮 Game List -->
   <div id="gameList">
-    <div class="game" data-url="games/snakegame.html">snake Game</div>
-    <div class="game" data-url="games/tetris.html">tetris</div>
-  </div> 
+    <div class="game" data-url="games/snakegame.html">Snake Game</div>
+    <div class="game" data-url="games/tetris.html">Tetris</div>
+    <!-- Add more games below -->
+    <!-- <div class="game" data-url="games/pacman.html">Pac-Man</div> -->
+  </div>
 
-  <!-- Game Viewer -->
+  <!-- 🕹️ Game Viewer -->
   <div id="gameContainer">
     <div id="controls">
       <button id="fullscreenBtn">Fullscreen</button>
@@ -95,32 +107,38 @@
     const closeBtn = document.getElementById('closeBtn');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-    // Search feature
-    searchBar.addEventListener('input', () => {
-      const text = searchBar.value.toLowerCase();
+    // 🔍 Search feature
+    searchBar.addEventListener('input', e => {
+      const text = e.target.value.toLowerCase();
       games.forEach(game => {
-        game.style.display = game.textContent.toLowerCase().includes(text) ? 'inline-block' : 'none';
+        game.style.display = game.textContent.toLowerCase().includes(text)
+          ? 'inline-block'
+          : 'none';
       });
     });
 
-    // Open game
+    // ▶️ Open game
     games.forEach(game => {
       game.addEventListener('click', () => {
         gameFrame.src = game.dataset.url;
         gameContainer.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // prevent background scroll
       });
     });
 
-    // Close game
+    // ❌ Close game
     closeBtn.addEventListener('click', () => {
       gameContainer.style.display = 'none';
       gameFrame.src = '';
+      document.body.style.overflow = 'auto';
     });
 
-    // Fullscreen button
+    // ⛶ Toggle Fullscreen
     fullscreenBtn.addEventListener('click', () => {
-      if (gameContainer.requestFullscreen) {
+      if (!document.fullscreenElement) {
         gameContainer.requestFullscreen();
+      } else {
+        document.exitFullscreen();
       }
     });
   </script>
