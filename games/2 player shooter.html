@@ -282,15 +282,20 @@ function resetMatch(){
   gameInterval = setInterval(gameLoop, 1000/60);
 }
 
-window.addEventListener('keydown', (e)=>{ keys[e.key.toLowerCase()] = true; });
-window.addEventListener('keyup', (e)=>{ keys[e.key.toLowerCase()] = false; });
+// Rättad key handling
 window.addEventListener('keydown', (e)=>{
-  if(e.key.toLowerCase() === player1.controls.shoot){ 
+  keys[e.key] = true;
+
+  if(e.key === player1.controls.shoot){ 
     player1.shoot(player2.x+player2.width/2, player2.y+player2.height/2); 
   }
-  if(e.key.toLowerCase() === player2.controls.shoot){ 
+  if(e.key === player2.controls.shoot){ 
     player2.shoot(player1.x+player1.width/2, player1.y+player1.height/2); 
   }
+});
+
+window.addEventListener('keyup', (e)=>{
+  keys[e.key] = false;
 });
 
 updateHighscores();
