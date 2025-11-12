@@ -150,3 +150,16 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'fullscreenRequest') {
+    // Fullscreen the game area (the game's own container)
+    const gameArea = document.getElementById('gameArea'); // or document.body
+    if (gameArea.requestFullscreen) {
+      gameArea.requestFullscreen();
+    } else if (gameArea.webkitRequestFullscreen) { // Safari
+      gameArea.webkitRequestFullscreen();
+    } else if (gameArea.msRequestFullscreen) { // IE11
+      gameArea.msRequestFullscreen();
+    }
+  }
+});
