@@ -79,112 +79,111 @@
 </head>
 <body>
 
-  <h1>My Game Hub</h1>
-  <input type="text" id="searchBar" placeholder="Search games...">
+<h1>My Game Hub</h1>
+<input type="text" id="searchBar" placeholder="Search games...">
 
-  <!-- 🎮 Game List -->
-  <div id="gameList">
-    <div class="game" data-url="games/snakegame.html" data-id="snakegame">Snake Game</div>
-    <div class="game" data-url="games/tetris.html" data-id="tetris">Tetris</div>
+<!-- Game List -->
+<div id="gameList">
+  <div class="game" data-url="games/snakegame.html" data-id="snakegame">Snake Game</div>
+  <div class="game" data-url="games/tetris.html" data-id="tetris">Tetris</div>
+</div>
+
+<!-- Game Viewer -->
+<div id="gameContainer">
+  <div id="controls">
+    <button id="backBtn">Back</button>
+    <button id="fullscreenBtn">Fullscreen</button>
   </div>
+  <iframe id="gameFrame"></iframe>
+</div>
 
-  <!-- 🕹️ Game Viewer -->
-  <div id="gameContainer">
-    <div id="controls">
-      <button id="fullscreenBtn">Fullscreen</button>
-      <button id="closeBtn">Close</button>
-    </div>
-    <iframe id="gameFrame"></iframe>
-  </div>
+<script>
+  const searchBar = document.getElementById('searchBar');
+  const games = document.querySelectorAll('.game');
+  const gameContainer = document.getElementById('gameContainer');
+  const gameFrame = document.getElementById('gameFrame');
+  const backBtn = document.getElementById('backBtn');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-  <script>
-    const searchBar = document.getElementById('searchBar');
-    const games = document.querySelectorAll('.game');
-    const gameContainer = document.getElementById('gameContainer');
-    const gameFrame = document.getElementById('gameFrame');
-    const closeBtn = document.getElementById('closeBtn');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
+  let currentGameId = null;
+  let autoSaveInterval = null;
 
-    let currentGameId = null;
-    let autoSaveInterval = null;
-
-    // 🔍 Search feature
-    searchBar.addEventListener('input', e => {
-      const text = e.target.value.toLowerCase();
-      games.forEach(game => {
-        game.style.display = game.textContent.toLowerCase().includes(text)
-          ? 'inline-block'
-          : 'none';
-      });
-    });
-
-    // ▶️ Open game
+  // 🔍 Search feature
+  searchBar.addEventListener('input', e => {
+    const text = e.target.value.toLowerCase();
     games.forEach(game => {
-      game.addEventListener('click', () => {
-        const url = game.dataset.url;
-        currentGameId = game.dataset.id;
-
-        gameFrame.src = url;
-        gameContainer.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
-        // 🔄 Start auto-saving every 5 seconds
-        if (autoSaveInterval) clearInterval(autoSaveInterval);
-        autoSaveInterval = setInterval(() => {
-          saveGameState();
-        }, 5000);
-      });
+      game.style.display = game.textContent.toLowerCase().includes(text) ? 'inline-block' : 'none';
     });
+  });
 
-    // ❌ Close game
-    closeBtn.addEventListener('click', () => {
-      gameContainer.style.display = 'none';
-      gameFrame.src = '';
-      document.body.style.overflow = 'auto';
+  // ▶️ Open game
+  games.forEach(game => {
+    game.addEventListener('click', () => {
+      const url = game.dataset.url;
+      currentGameId = game.dataset.id;
 
-      clearInterval(autoSaveInterval);
-      autoSaveInterval = null;
+      gameFrame.src = url;
+      gameContainer.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Start auto-saving every 5 seconds
+      if (autoSaveInterval) clearInterval(autoSaveInterval);
+      autoSaveInterval = setInterval(() => {
+        saveGameState();
+      }, 5000);
     });
+  });
 
-    // ⛶ Toggle Fullscreen
-    fullscreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        gameContainer.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    });
+  // 🔙 Back button
+  backBtn.addEventListener('click', () => {
+    gameContainer.style.display = 'none';
+    gameFrame.src = '';
+    document.body.style.overflow = 'auto';
+    clearInterval(autoSaveInterval);
+    autoSaveInterval = null;
+    currentGameId = null;
+  });
 
-    // 💾 Listen for save data from the iframe
-    window.addEventListener('message', (event) => {
-      if (event.data.type === 'saveData' && currentGameId) {
-        localStorage.setItem(`game_${currentGameId}`, JSON.stringify(event.data.payload));
-      }
-    });
-
-    // 🧠 Send saved data to the iframe (for loading)
-    function sendSavedData() {
-      const saved = localStorage.getItem(`game_${currentGameId}`);
-      if (saved) {
-        gameFrame.contentWindow.postMessage({
-          type: 'loadData',
-          payload: JSON.parse(saved)
-        }, '*');
-      }
+  // ⛶ Fullscreen the game iframe only
+  fullscreenBtn.addEventListener('click', () => {
+    if (gameFrame.requestFullscreen) {
+      gameFrame.requestFullscreen();
+    } else if (gameFrame.webkitRequestFullscreen) { /* Safari */
+      gameFrame.webkitRequestFullscreen();
+    } else if (gameFrame.msRequestFullscreen) { /* IE11 */
+      gameFrame.msRequestFullscreen();
     }
+  });
 
-    // 💾 Auto-save function
-    function saveGameState() {
-      if (!currentGameId) return;
-      // Ask the iframe for its current game state
-      if (gameFrame.contentWindow) {
-        gameFrame.contentWindow.postMessage({ type: 'requestSaveData' }, '*');
-      }
+  // 💾 Listen for save data from the iframe
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'saveData' && currentGameId) {
+      localStorage.setItem(`game_${currentGameId}`, JSON.stringify(event.data.payload));
     }
+  });
 
-    // 🕒 Load save when game loads
-    gameFrame.addEventListener('load', sendSavedData);
-  </script>
+  // 🧠 Send saved data to the iframe
+  function sendSavedData() {
+    const saved = localStorage.getItem(`game_${currentGameId}`);
+    if (saved && gameFrame.contentWindow) {
+      gameFrame.contentWindow.postMessage({
+        type: 'loadData',
+        payload: JSON.parse(saved)
+      }, '*');
+    }
+  }
 
+  // 💾 Auto-save function
+  function saveGameState() {
+    if (!currentGameId) return;
+    if (gameFrame.contentWindow) {
+      gameFrame.contentWindow.postMessage({ type: 'requestSaveData' }, '*');
+    }
+  }
+
+  // Load save when iframe loads
+  gameFrame.addEventListener('load', sendSavedData);
+
+</script>
 </body>
 </html>
