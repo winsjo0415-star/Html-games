@@ -76,74 +76,69 @@ const weapons = {
 
 function updateHighscores(){
   const lastGame = JSON.parse(localStorage.getItem('lastGame')||'null');
-  if(lastGame){
-    document.getElementById('highscores').textContent = JSON.stringify(lastGame, null, 2);
-  } else {
-    document.getElementById('highscores').textContent = 'No previous game saved.';
-  }
+  document.getElementById('highscores').textContent = lastGame ? JSON.stringify(lastGame,null,2) : 'No previous game saved.';
 }
 
 class Player {
-  constructor(name, x, y, color, controls){
-    this.name = name;
-    this.x = x;
-    this.y = y;
-    this.width = 40;
-    this.height = 60;
-    this.hp = 100;
-    this.kills = 0;
-    this.color = color;
-    this.controls = controls;
-    this.isDucking = false;
-    this.weapon = 'pistol';
-    this.velocityY = 0;
-    this.onGround = false;
+  constructor(name,x,y,color,controls){
+    this.name=name;
+    this.x=x; this.y=y;
+    this.width=40; this.height=60;
+    this.color=color; this.controls=controls;
+    this.hp=100; this.kills=0;
+    this.isDucking=false;
+    this.weapon='pistol';
+    this.velocityY=0;
+    this.onGround=false;
   }
 
-  move() {
-    if(keys[this.controls.left]) this.x -= 5;
-    if(keys[this.controls.right]) this.x += 5;
+  move(){
+    // Horisontell rörelse
+    if(keys[this.controls.left]) this.x -=5;
+    if(keys[this.controls.right]) this.x +=5;
 
-    this.velocityY += 0.8; // gravity
+    // Gravity
+    this.velocityY +=0.8;
     this.y += this.velocityY;
 
-    this.onGround = false;
+    // Reset onGround
+    this.onGround=false;
 
-    // Collision with ground
+    // Mark
     if(this.y + this.height >= canvas.height){
       this.y = canvas.height - this.height;
-      this.velocityY = 0;
-      this.onGround = true;
+      this.velocityY=0;
+      this.onGround=true;
     }
 
-    // Collision with platforms
+    // Plattformar
     mapHurdles.forEach(h=>{
-      if(this.x + this.width > h.x && this.x < h.x + h.width &&
-         this.y + this.height >= h.y && this.y + this.height <= h.y + 10 && this.velocityY >= 0){
+      if(this.x + this.width > h.x && this.x < h.x+h.width &&
+         this.y + this.height >= h.y && this.y + this.height <= h.y+10 && this.velocityY >=0){
         this.y = h.y - this.height;
-        this.velocityY = 0;
-        this.onGround = true;
+        this.velocityY=0;
+        this.onGround=true;
       }
     });
 
-    // Hopp
+    // Hoppa EFTER collision
     if(keys[this.controls.jump] && this.onGround){
-      this.velocityY = -15;
-      this.onGround = false;
+      this.velocityY=-15;
+      this.onGround=false;
     }
 
     // Duck
     this.isDucking = keys[this.controls.duck];
   }
 
-  draw() {
-    let drawHeight = this.isDucking ? this.height / 2 : this.height;
-    let drawY = this.isDucking ? this.y + this.height / 2 : this.y;
+  draw(){
+    let drawHeight = this.isDucking ? this.height/2 : this.height;
+    let drawY = this.isDucking ? this.y + this.height/2 : this.y;
 
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, drawY, this.width, drawHeight);
-    ctx.fillStyle = 'white';
-    ctx.fillText(this.name + ' HP: ' + this.hp + ' Weapon: ' + this.weapon, this.x, drawY - 10);
+    ctx.fillStyle=this.color;
+    ctx.fillRect(this.x,drawY,this.width,drawHeight);
+    ctx.fillStyle='white';
+    ctx.fillText(this.name + ' HP:' + this.hp + ' Weapon:' + this.weapon, this.x, drawY-10);
 
     if(weapons[this.weapon].melee){
       ctx.strokeStyle='red';
@@ -151,52 +146,52 @@ class Player {
     }
   }
 
-  shoot(targetX, targetY){
+  shoot(targetX,targetY){
     if(!weapons[this.weapon].melee){
-      bullets.push({x:this.x+this.width/2, y:this.y+this.height/2, targetX, targetY, damage: weapons[this.weapon].damage, owner:this});
-    } else {
-      let other = (this===player1) ? player2 : player1;
-      let dx = (other.x + other.width/2) - (this.x + this.width/2);
-      let dy = (other.y + other.height/2) - (this.y + this.height/2);
-      let distance = Math.sqrt(dx*dx + dy*dy);
-      if(distance <= weapons.sword.range){
-        other.hp -= weapons.sword.damage;
-        if(other.hp <=0){ this.kills++; other.hp=0; autoSave(); showShop(); }
+      bullets.push({x:this.x+this.width/2,y:this.y+this.height/2,targetX,targetY,damage:weapons[this.weapon].damage,owner:this});
+    }else{
+      let other = (this===player1)?player2:player1;
+      let dx=(other.x+other.width/2)-(this.x+this.width/2);
+      let dy=(other.y+other.height/2)-(this.y+this.height/2);
+      let distance=Math.sqrt(dx*dx+dy*dy);
+      if(distance<=weapons.sword.range){
+        other.hp-=weapons.sword.damage;
+        if(other.hp<=0){ this.kills++; other.hp=0; autoSave(); showShop(); }
       }
     }
   }
 }
 
 function startGame(){
-  const p1Name = document.getElementById('player1Name').value || 'Player1';
-  const p2Name = document.getElementById('player2Name').value || 'Player2';
-  const char1 = document.getElementById('char1Select').value;
-  const char2 = document.getElementById('char2Select').value;
-  const map = document.getElementById('mapSelect').value;
+  const p1Name=document.getElementById('player1Name').value || 'Player1';
+  const p2Name=document.getElementById('player2Name').value || 'Player2';
+  const char1=document.getElementById('char1Select').value;
+  const char2=document.getElementById('char2Select').value;
+  const map=document.getElementById('mapSelect').value;
 
-  player1 = new Player(p1Name, 100, 500, char1, { jump:'w', left:'a', duck:'s', right:'d', shoot:'r' });
-  player2 = new Player(p2Name, 600, 500, char2, { jump:'ArrowUp', left:'ArrowLeft', duck:'ArrowDown', right:'ArrowRight', shoot:',' });
+  player1=new Player(p1Name,100,500,char1,{jump:'w',left:'a',duck:'s',right:'d',shoot:'r'});
+  player2=new Player(p2Name,600,500,char2,{jump:'ArrowUp',left:'ArrowLeft',duck:'ArrowDown',right:'ArrowRight',shoot:','});
 
   setupMap(map);
-  document.getElementById('menu').style.display = 'none';
-  canvas.style.display = 'block';
-  gameInterval = setInterval(gameLoop, 1000/60);
-  setInterval(()=>{ gameTime--; if(gameTime<=0){ endGame(); }},1000);
+  document.getElementById('menu').style.display='none';
+  canvas.style.display='block';
+  gameInterval=setInterval(gameLoop,1000/60);
+  setInterval(()=>{ gameTime--; if(gameTime<=0) endGame(); },1000);
 }
 
 function setupMap(map){
-  mapHurdles = [];
-  if(map==1){ mapHurdles = [ {x:300,y:500,width:200,height:20} ]; }
-  if(map==2){ mapHurdles = [ {x:200,y:400,width:400,height:20}, {x:100,y:500,width:100,height:20} ]; }
-  if(map==3){ mapHurdles = [ {x:150,y:450,width:500,height:20} ]; }
+  mapHurdles=[];
+  if(map==1) mapHurdles=[{x:300,y:500,width:200,height:20}];
+  if(map==2) mapHurdles=[{x:200,y:400,width:400,height:20},{x:100,y:500,width:100,height:20}];
+  if(map==3) mapHurdles=[{x:150,y:450,width:500,height:20}];
 }
 
-function toggleMusic(){ menuMusic.paused ? menuMusic.play() : menuMusic.pause(); }
+function toggleMusic(){ menuMusic.paused?menuMusic.play():menuMusic.pause(); }
 
 function gameLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle='grey';
-  mapHurdles.forEach(h => ctx.fillRect(h.x,h.y,h.width,h.height));
+  mapHurdles.forEach(h=>ctx.fillRect(h.x,h.y,h.width,h.height));
 
   player1.move();
   player2.move();
@@ -204,64 +199,62 @@ function gameLoop(){
   player2.draw();
 
   for(let i=bullets.length-1;i>=0;i--){
-    let b = bullets[i];
-    let dx = b.targetX - b.x;
-    let dy = b.targetY - b.y;
-    let dist = Math.sqrt(dx*dx + dy*dy);
+    let b=bullets[i];
+    let dx=b.targetX-b.x;
+    let dy=b.targetY-b.y;
+    let dist=Math.sqrt(dx*dx+dy*dy);
     if(dist<1){ bullets.splice(i,1); continue; }
-    b.x += dx/dist*weapons[b.owner.weapon].speed;
-    b.y += dy/dist*weapons[b.owner.weapon].speed;
+    b.x+=dx/dist*weapons[b.owner.weapon].speed;
+    b.y+=dy/dist*weapons[b.owner.weapon].speed;
     ctx.fillStyle='yellow';
     ctx.fillRect(b.x,b.y,5,5);
 
-    let other = (b.owner===player1)?player2:player1;
-    let drawHeight = other.isDucking ? other.height/2 : other.height;
-    let drawY = other.isDucking ? other.y + other.height/2 : other.y;
+    let other=(b.owner===player1)?player2:player1;
+    let drawHeight=other.isDucking?other.height/2:other.height;
+    let drawY=other.isDucking?other.y+other.height/2:other.y;
 
-    if(b.x >= other.x && b.x <= other.x+other.width && b.y >= drawY && b.y <= drawY+drawHeight){
-      other.hp -= b.damage;
+    if(b.x>=other.x && b.x<=other.x+other.width && b.y>=drawY && b.y<=drawY+drawHeight){
+      other.hp-=b.damage;
       if(other.hp<=0){ b.owner.kills++; other.hp=0; autoSave(); showShop(); }
       bullets.splice(i,1);
     }
   }
 
-  if(player1.hp <=0 || player2.hp <=0){ endGame(); }
+  if(player1.hp<=0 || player2.hp<=0) endGame();
 }
 
 function endGame(){
   clearInterval(gameInterval);
-  let winner = player1.hp > player2.hp ? player1.name : player2.name;
+  let winner=player1.hp>player2.hp?player1.name:player2.name;
   alert(winner + ' WINS');
   autoSave();
   showShop();
 }
 
 function autoSave(){
-  const lastGame = {
-    date: new Date().toLocaleString(),
-    player1: { name: player1.name, kills: player1.kills, weapon: player1.weapon },
-    player2: { name: player2.name, kills: player2.kills, weapon: player2.weapon },
-    winner: player1.hp > player2.hp ? player1.name : player2.name
-  };
-  localStorage.setItem('lastGame', JSON.stringify(lastGame));
+  const lastGame={date:new Date().toLocaleString(),
+                  player1:{name:player1.name,kills:player1.kills,weapon:player1.weapon},
+                  player2:{name:player2.name,kills:player2.kills,weapon:player2.weapon},
+                  winner:player1.hp>player2.hp?player1.name:player2.name};
+  localStorage.setItem('lastGame',JSON.stringify(lastGame));
   updateHighscores();
 }
 
 function showShop(){
   canvas.style.display='none';
   document.getElementById('shop').style.display='flex';
-  document.getElementById('p1Kills').textContent = player1.kills;
-  document.getElementById('p2Kills').textContent = player2.kills;
-  const shopDiv = document.getElementById('shopWeapons');
+  document.getElementById('p1Kills').textContent=player1.kills;
+  document.getElementById('p2Kills').textContent=player2.kills;
+  const shopDiv=document.getElementById('shopWeapons');
   shopDiv.innerHTML='';
   for(let w in weapons){
-    const btn = document.createElement('button');
-    btn.textContent = `${w} (Cost: ${weapons[w].kills})`;
+    const btn=document.createElement('button');
+    btn.textContent=`${w} (Cost: ${weapons[w].kills})`;
     btn.className='weapon-btn';
-    btn.disabled = player1.kills < weapons[w].kills && player2.kills < weapons[w].kills;
-    btn.onclick = ()=>{
-      if(player1.kills >= weapons[w].kills){ player1.weapon=w; }
-      if(player2.kills >= weapons[w].kills){ player2.weapon=w; }
+    btn.disabled = player1.kills<weapons[w].kills && player2.kills<weapons[w].kills;
+    btn.onclick=()=>{
+      if(player1.kills>=weapons[w].kills) player1.weapon=w;
+      if(player2.kills>=weapons[w].kills) player2.weapon=w;
       autoSave();
     };
     shopDiv.appendChild(btn);
@@ -279,24 +272,16 @@ function resetMatch(){
   player1.x=100; player1.y=500; player2.x=600; player2.y=500;
   bullets=[];
   gameTime=120;
-  gameInterval = setInterval(gameLoop, 1000/60);
+  gameInterval=setInterval(gameLoop,1000/60);
 }
 
-// Rättad key handling
-window.addEventListener('keydown', (e)=>{
-  keys[e.key] = true;
-
-  if(e.key === player1.controls.shoot){ 
-    player1.shoot(player2.x+player2.width/2, player2.y+player2.height/2); 
-  }
-  if(e.key === player2.controls.shoot){ 
-    player2.shoot(player1.x+player1.width/2, player1.y+player1.height/2); 
-  }
+// Key handling utan toLowerCase()
+window.addEventListener('keydown',(e)=>{
+  keys[e.key]=true;
+  if(e.key===player1.controls.shoot) player1.shoot(player2.x+player2.width/2,player2.y+player2.height/2);
+  if(e.key===player2.controls.shoot) player2.shoot(player1.x+player1.width/2,player1.y+player1.height/2);
 });
-
-window.addEventListener('keyup', (e)=>{
-  keys[e.key] = false;
-});
+window.addEventListener('keyup',(e)=>{ keys[e.key]=false; });
 
 updateHighscores();
 </script>
