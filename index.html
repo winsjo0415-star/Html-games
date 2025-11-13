@@ -1,91 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Game Hub</title>
-  <style>
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-    }
-    h1 {
-      background-color: #2c2c2c;
-      margin: 0;
-      padding: 20px;
-    }
-    #searchBar {
-      width: 60%;
-      padding: 10px;
-      margin: 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: none;
-      outline: none;
-    }
-    .game {
-      background-color: #333;
-      display: inline-block;
-      margin: 10px;
-      padding: 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      width: 200px;
-      transition: 0.2s;
-    }
-    .game:hover {
-      background-color: #444;
-      transform: scale(1.05);
-    }
-    #gameContainer {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      z-index: 1000;
-      flex-direction: column;
-    }
-    #controls {
-      background: #111;
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    #gameFrame {
-      flex-grow: 1;
-      width: 100%;
-      border: none;
-    }
-    button {
-      padding: 10px 15px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #444;
-      color: white;
-      transition: 0.2s;
-    }
-    button:hover {
-      background-color: #666;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Game Hub</title>
+<style>
+body {
+  background-color: #1e1e1e;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+}
+h1 {
+  background-color: #2c2c2c;
+  margin: 0;
+  padding: 20px;
+}
+#searchBar {
+  width: 60%;
+  padding: 10px;
+  margin: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+/* Game cards */
+.game {
+  position: relative;
+  background-color: #333;
+  display: inline-block;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  transition: 0.2s;
+  text-align: center;
+}
+.game:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
+
+/* Game icons */
+.gameIcon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px auto;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#gameContainer {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  z-index: 1000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#controls {
+  background: #111;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+#gameFrame {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border: none;
+  box-shadow: 0 0 20px #000;
+}
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #444;
+  color: white;
+  transition: 0.2s;
+}
+button:hover {
+  background-color: #666;
+}
+
+/* Popup overlay */
+#loginPopup {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+#loginPopupContent {
+  background: #222;
+  padding: 30px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+#loginPopupContent h2 {
+  margin: 0 0 20px 0;
+}
+#closePopup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #444;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#closePopup:hover {
+  background: #666;
+}
+</style>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
 <h1>My Game Hub</h1>
+<span id="userName"></span>
+<br>
 <input type="text" id="searchBar" placeholder="Search games...">
 
-<!-- Game List -->
+<!-- Game List with Icons -->
 <div id="gameList">
-  <div class="game" data-url="https://web.cloudmoonapp.com/data-id="cloudmoonapp">cloudmoonapp</div>
-  <div class="game" data-url="https://geometry-game.io/" data-id="geometry dash">geometry dash</div>
+  <div class="game" data-url="https://web.cloudmoonapp.com/" data-id="cloudmoonapp">
+    <img src="images/cloudmoonapp-icon.png" class="gameIcon" alt="CloudMoonApp Icon">
+    CloudMoonApp
+  </div>
+  <div class="game" data-url="https://geometry-game.io/" data-id="geometrydash">
+    <img src="images/geometrydash-icon.png" class="gameIcon" alt="Geometry Dash Icon">
+    Geometry Dash
+  </div>
+</div>
+
+<!-- Login Popup -->
+<div id="loginPopup">
+  <div id="loginPopupContent">
+    <div id="closePopup">X</div>
+    <h2>Sign up/in with your Google account to play the games</h2>
+    <button id="loginBtn">Sign in with Google</button>
+  </div>
 </div>
 
 <!-- Game Viewer -->
@@ -98,91 +184,158 @@
 </div>
 
 <script>
-  const searchBar = document.getElementById('searchBar');
-  const games = document.querySelectorAll('.game');
-  const gameContainer = document.getElementById('gameContainer');
-  const gameFrame = document.getElementById('gameFrame');
-  const backBtn = document.getElementById('backBtn');
-  const fullscreenBtn = document.getElementById('fullscreenBtn');
+// --- Firebase Setup ---
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const database = firebase.database();
 
-  let currentGameId = null;
-  let autoSaveInterval = null;
+// --- Elements ---
+const loginPopup = document.getElementById('loginPopup');
+const loginBtn = document.getElementById('loginBtn');
+const closePopup = document.getElementById('closePopup');
+const userName = document.getElementById('userName');
+const searchBar = document.getElementById('searchBar');
+const games = document.querySelectorAll('.game');
+const gameContainer = document.getElementById('gameContainer');
+const gameFrame = document.getElementById('gameFrame');
+const backBtn = document.getElementById('backBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-  // 🔍 Search feature
-  searchBar.addEventListener('input', e => {
-    const text = e.target.value.toLowerCase();
-    games.forEach(game => {
-      game.style.display = game.textContent.toLowerCase().includes(text) ? 'inline-block' : 'none';
+let currentGameId = null;
+let currentGameURL = null;
+let autoSaveInterval = null;
+let currentUser = null;
+
+// --- Google Login ---
+loginBtn.addEventListener('click', () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider)
+    .then(result => {
+      currentUser = result.user;
+      userName.textContent = `Hello, ${currentUser.displayName}`;
+      document.cookie = `user=${currentUser.uid}; path=/; max-age=${60*60*24*30}`; // 30 days
+      loginPopup.style.display = 'none';
+      openGame(currentGameURL, currentGameId);
+    })
+    .catch(console.error);
+});
+
+// Close popup button
+closePopup.addEventListener('click', () => {
+  loginPopup.style.display = 'none';
+  currentGameId = null;
+  currentGameURL = null;
+});
+
+// Auto-login if cookie exists
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+window.addEventListener('load', () => {
+  const uid = getCookie('user');
+  if (uid) {
+    auth.onAuthStateChanged(user => {
+      if (user && user.uid === uid) {
+        currentUser = user;
+        userName.textContent = `Hello, ${user.displayName}`;
+      }
     });
-  });
+  }
+});
 
-  // ▶️ Open game
+// --- Search feature ---
+searchBar.addEventListener('input', e => {
+  const text = e.target.value.toLowerCase();
   games.forEach(game => {
-    game.addEventListener('click', () => {
-      const url = game.dataset.url;
-      currentGameId = game.dataset.id;
-
-      gameFrame.src = url;
-      gameContainer.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-
-      // Start auto-saving every 5 seconds
-      if (autoSaveInterval) clearInterval(autoSaveInterval);
-      autoSaveInterval = setInterval(() => {
-        saveGameState();
-      }, 5000);
-    });
+    game.style.display = game.textContent.toLowerCase().includes(text) ? 'inline-block' : 'none';
   });
+});
 
-  // 🔙 Back button
-  backBtn.addEventListener('click', () => {
-    gameContainer.style.display = 'none';
-    gameFrame.src = '';
-    document.body.style.overflow = 'auto';
-    clearInterval(autoSaveInterval);
-    autoSaveInterval = null;
-    currentGameId = null;
-  });
+// --- Click on game ---
+games.forEach(game => {
+  game.addEventListener('click', () => {
+    const url = game.dataset.url;
+    const id = game.dataset.id;
 
-  // ⛶ Fullscreen the game iframe only
-  fullscreenBtn.addEventListener('click', () => {
-    if (gameFrame.requestFullscreen) {
-      gameFrame.requestFullscreen();
-    } else if (gameFrame.webkitRequestFullscreen) { /* Safari */
-      gameFrame.webkitRequestFullscreen();
-    } else if (gameFrame.msRequestFullscreen) { /* IE11 */
-      gameFrame.msRequestFullscreen();
+    if (!currentUser) {
+      currentGameId = id;
+      currentGameURL = url;
+      loginPopup.style.display = 'flex';
+      return;
     }
-  });
 
-  // 💾 Listen for save data from the iframe
-  window.addEventListener('message', (event) => {
-    if (event.data.type === 'saveData' && currentGameId) {
-      localStorage.setItem(`game_${currentGameId}`, JSON.stringify(event.data.payload));
-    }
+    openGame(url, id);
   });
+});
 
-  // 🧠 Send saved data to the iframe
-  function sendSavedData() {
-    const saved = localStorage.getItem(`game_${currentGameId}`);
-    if (saved && gameFrame.contentWindow) {
-      gameFrame.contentWindow.postMessage({
-        type: 'loadData',
-        payload: JSON.parse(saved)
-      }, '*');
-    }
+// --- Open game ---
+function openGame(url, id) {
+  currentGameId = id;
+  currentGameURL = url;
+  gameFrame.src = url;
+  gameContainer.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  if (autoSaveInterval) clearInterval(autoSaveInterval);
+  autoSaveInterval = setInterval(saveGameState, 5000);
+}
+
+// --- Back button ---
+backBtn.addEventListener('click', () => {
+  gameContainer.style.display = 'none';
+  gameFrame.src = '';
+  document.body.style.overflow = 'auto';
+  clearInterval(autoSaveInterval);
+  autoSaveInterval = null;
+  currentGameId = null;
+  currentGameURL = null;
+});
+
+// --- Fullscreen ---
+fullscreenBtn.addEventListener('click', () => {
+  if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
+  else if (gameFrame.webkitRequestFullscreen) gameFrame.webkitRequestFullscreen();
+  else if (gameFrame.msRequestFullscreen) gameFrame.msRequestFullscreen();
+});
+
+// --- Cloud Save ---
+function saveGameState() {
+  if (!currentUser || !currentGameId) return;
+  if (gameFrame.contentWindow) {
+    gameFrame.contentWindow.postMessage({ type: 'requestSaveData' }, '*');
   }
+}
 
-  // 💾 Auto-save function
-  function saveGameState() {
-    if (!currentGameId) return;
-    if (gameFrame.contentWindow) {
-      gameFrame.contentWindow.postMessage({ type: 'requestSaveData' }, '*');
-    }
+// Listen for save data from iframe
+window.addEventListener('message', event => {
+  if (event.data.type === 'saveData' && currentGameId && currentUser) {
+    const ref = database.ref(`users/${currentUser.uid}/games/${currentGameId}`);
+    ref.set(event.data.payload);
   }
+});
 
-  // Load save when iframe loads
-  gameFrame.addEventListener('load', sendSavedData);
+// Load saved data when iframe loads
+function sendSavedData() {
+  if (!currentUser || !currentGameId) return;
+  const ref = database.ref(`users/${currentUser.uid}/games/${currentGameId}`);
+  ref.once('value').then(snapshot => {
+    const data = snapshot.val();
+    if (data && gameFrame.contentWindow) {
+      gameFrame.contentWindow.postMessage({ type: 'loadData', payload: data }, '*');
+    }
+  });
+}
+gameFrame.addEventListener('load', sendSavedData);
 
 </script>
 </body>
