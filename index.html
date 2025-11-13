@@ -56,6 +56,10 @@ h1 {
   margin: 0 auto 10px auto;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  transition: opacity 0.3s; /* fade effect */
+}
+.gameIcon:hover {
+  opacity: 0.7; /* slight fade on hover */
 }
 
 #gameContainer {
@@ -111,6 +115,7 @@ button:hover {
   z-index: 2000;
   justify-content: center;
   align-items: center;
+  display: flex;
 }
 #loginPopupContent {
   background: #222;
@@ -135,9 +140,28 @@ button:hover {
   line-height: 30px;
   font-weight: bold;
   cursor: pointer;
+  text-align: center;
 }
 #closePopup:hover {
   background: #666;
+}
+
+/* Top-right Google login for popup */
+#popupLoginBtn {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+  background-color: #4285F4;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  transition: 0.2s;
+}
+#popupLoginBtn:hover {
+  background-color: #3367d6;
 }
 </style>
 
@@ -170,7 +194,7 @@ button:hover {
   <div id="loginPopupContent">
     <div id="closePopup">X</div>
     <h2>Sign up/in with your Google account to play the games</h2>
-    <button id="loginBtn">Sign in with Google</button>
+    <button id="popupLoginBtn">Sign in with Google</button>
   </div>
 </div>
 
@@ -200,7 +224,7 @@ const database = firebase.database();
 
 // --- Elements ---
 const loginPopup = document.getElementById('loginPopup');
-const loginBtn = document.getElementById('loginBtn');
+const popupLoginBtn = document.getElementById('popupLoginBtn');
 const closePopup = document.getElementById('closePopup');
 const userName = document.getElementById('userName');
 const searchBar = document.getElementById('searchBar');
@@ -216,7 +240,7 @@ let autoSaveInterval = null;
 let currentUser = null;
 
 // --- Google Login ---
-loginBtn.addEventListener('click', () => {
+popupLoginBtn.addEventListener('click', () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   auth.signInWithPopup(provider)
     .then(result => {
