@@ -39,7 +39,7 @@ header h1{margin:0;font-size:20px;}
 #loginPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#222;padding:28px;border-radius:12px;width:420px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,.6);}
 #loginPopup h2{margin:0 0 8px 0;font-size:18px;text-align:center;}
 #loginPopup p{margin:0 0 14px 0;color:#ccc;text-align:center;}
-#popupLoginBtn{background:#4285F4;color:white;border:none;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:600;}
+#googleLoginBtn{display:flex;justify-content:center;}
 #loginCloseBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:#444;color:white;border:none;cursor:pointer;}
 #descPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:#222;color:#fff;padding:22px;border-radius:10px;width:420px;max-width:94%;box-shadow:0 10px 30px rgba(0,0,0,.6);}
 #descPopup h3{margin:0 0 8px 0;}
@@ -71,6 +71,7 @@ header h1{margin:0;font-size:20px;}
 
     <div id="gameAreaWrap">
       <div id="gameList">
+        <!-- Example Game -->
         <div class="game" data-id="cloudmoonapp" data-url="https://web.cloudmoonapp.com/" data-tags="website" data-desc="CloudMoonApp — web-based game platform.">
           <div class="favoriteStar">⭐</div>
           <button class="menuBtn">⋮</button>
@@ -134,7 +135,13 @@ header h1{margin:0;font-size:20px;}
 // ---------- Google Login ----------
 let userLoggedIn=false;
 let currentGame=null;
+
 window.onload=function(){
+  document.getElementById('gameContainer').style.display='none';
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('loginPopup').style.display='none';
+  document.getElementById('descPopup').style.display='none';
+
   userLoggedIn=localStorage.getItem("googleUser")?true:false;
 
   google.accounts.id.initialize({
@@ -152,8 +159,8 @@ window.onload=function(){
 function handleCredentialResponse(response){
   localStorage.setItem("googleUser",response.credential);
   userLoggedIn=true;
-  document.getElementById("loginPopup").style.display="none";
-  document.getElementById("overlay").style.display="none";
+  document.getElementById("loginPopup").style.display='none';
+  document.getElementById("overlay").style.display='none';
   if(currentGame) openGame(currentGame);
 }
 
@@ -276,15 +283,19 @@ function initGames(){
 
     playBtn.addEventListener('click',()=>{
       if(!userLoggedIn){
+        currentGame=g;
         document.getElementById('overlay').style.display='block';
         document.getElementById('loginPopup').style.display='block';
-        currentGame=g;
       } else openGame(g);
     });
   });
 
   document.body.addEventListener('click',()=>document.querySelectorAll('.menuPopup').forEach(p=>p.style.display='none'));
   document.getElementById('descCloseBtn').addEventListener('click',()=>document.getElementById('descPopup').style.display='none');
+  document.getElementById('loginCloseBtn').addEventListener('click',()=>{
+    document.getElementById('loginPopup').style.display='none';
+    document.getElementById('overlay').style.display='none';
+  });
 }
 
 // ---------- Open Game ----------
@@ -330,5 +341,4 @@ function resizeGameFrame(){
 
 window.addEventListener('resize',resizeGameFrame);
 </script>
-</body>
-</html>
+</body
