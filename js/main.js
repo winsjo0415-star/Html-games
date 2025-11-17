@@ -21,6 +21,7 @@ const games = [
   }
 ];
 
+// DOM elements
 const gameGrid=document.getElementById('gameGrid');
 const searchBar=document.getElementById('searchBar');
 const gameContainer=document.getElementById('gameContainer');
@@ -32,13 +33,14 @@ const gameDescription=document.getElementById('gameDescription');
 const gameCreator=document.getElementById('gameCreator');
 const gameLastUpdated=document.getElementById('gameLastUpdated');
 const gameTags=document.getElementById('gameTags');
+const newGamesContainer=document.getElementById('newGamesContainer');
 const shareModal=document.getElementById('shareModal');
 const shareBtn=document.getElementById('shareBtn');
 const shareLink=document.getElementById('shareLink');
 const copyBtn=document.getElementById('copyBtn');
 const closeShare=document.getElementById('closeShare');
 
-// Render main hub games
+// ----- Main Hub -----
 function renderGames(){
   gameGrid.innerHTML='';
   const filter=searchBar.value.toLowerCase();
@@ -47,8 +49,8 @@ function renderGames(){
       const card=document.createElement('div'); card.className='game-card';
       const img=document.createElement('img'); img.src=game.image;
       card.appendChild(img);
-      
-      // Hover video logic
+
+      // Hover video
       let videoIndex=0;
       let hoverInterval=null;
       card.addEventListener('mouseenter',()=>{
@@ -69,7 +71,6 @@ function renderGames(){
         card.replaceChild(img, card.querySelector('video'));
       });
 
-      // Click to open game
       card.addEventListener('click',()=>{
         gameContainer.style.display='flex';
         gameFrame.src=game.url;
@@ -85,22 +86,17 @@ function renderGames(){
   });
 }
 
-// Render right sidebar random games with hover videos
+// ----- Right Sidebar -----
 function renderRandomGames(){
   randomGamesDiv.innerHTML='';
   let shuffled=games.sort(()=>0.5-Math.random()).slice(0,20);
   shuffled.forEach(g=>{
     const card=document.createElement('div'); card.className='random-game-card';
     const img=document.createElement('img'); img.src=g.image;
+    const overlay=document.createElement('div'); overlay.className='random-game-overlay'; overlay.textContent=g.name;
+    card.appendChild(img); card.appendChild(overlay);
 
-    const overlay=document.createElement('div');
-    overlay.className='random-game-overlay';
-    overlay.textContent=g.name;
-
-    card.appendChild(img);
-    card.appendChild(overlay);
-
-    // Hover videos for sidebar games
+    // Hover videos
     let videoIndex=0;
     let hoverInterval=null;
     card.addEventListener('mouseenter',()=>{
@@ -133,7 +129,53 @@ function renderRandomGames(){
   });
 }
 
-// Share modal
+// ----- New Games Slider -----
+function renderNewGamesSlider(){
+  newGamesContainer.innerHTML='';
+  // Last 15 games
+  const newGames=games.slice(-15).reverse();
+  newGames.forEach(game=>{
+    const card=document.createElement('div'); card.className='new-game-card';
+    const img=document.createElement('img'); img.src=game.image;
+    const overlay=document.createElement('div'); overlay.className='new-game-overlay'; overlay.textContent=game.name;
+    card.appendChild(img); card.appendChild(overlay);
+
+    // Hover video
+    let videoIndex=0;
+    let hoverInterval=null;
+    card.addEventListener('mouseenter',()=>{
+      if(game.videos.length>0){
+        const video=document.createElement('video');
+        video.src=game.videos[videoIndex];
+        video.muted=true; video.autoplay=true; video.loop=false;
+        card.replaceChild(video,img);
+        hoverInterval=setInterval(()=>{
+          videoIndex=(videoIndex+1)%game.videos.length;
+          video.src=game.videos[videoIndex];
+          video.play();
+        },4000);
+      }
+    });
+    card.addEventListener('mouseleave',()=>{
+      if(hoverInterval) clearInterval(hoverInterval);
+      if(card.querySelector('video')) card.replaceChild(img, card.querySelector('video'));
+    });
+
+    card.addEventListener('click',()=>{
+      gameContainer.style.display='flex';
+      gameFrame.src=game.url;
+      gameDescription.textContent=game.description;
+      gameCreator.textContent="Creator: "+game.creator;
+      gameLastUpdated.textContent="Last Updated: "+game.lastUpdated;
+      gameTags.textContent="Tags: "+game.tags.join(", ");
+      renderRandomGames();
+    });
+
+    newGamesContainer.appendChild(card);
+  });
+}
+
+// ----- Share modal -----
 shareBtn.addEventListener('click',()=>{
   shareModal.style.display='block';
   shareLink.value=window.location.href+"#"+gameFrame.src;
@@ -141,11 +183,14 @@ shareBtn.addEventListener('click',()=>{
 copyBtn.addEventListener('click',()=>{ shareLink.select(); document.execCommand('copy'); });
 closeShare.addEventListener('click',()=>{ shareModal.style.display='none'; });
 
-// Controls
+// ----- Controls -----
 backBtn.addEventListener('click',()=>{ gameContainer.style.display='none'; gameFrame.src=''; });
 fullscreenBtn.addEventListener('click',()=>{ if(gameFrame.requestFullscreen) gameFrame.requestFullscreen(); });
 
-// Search
+// ----- Search -----
 searchBar.addEventListener('input', renderGames);
 
+// ----- Initial render -----
 renderGames();
+renderRandomGames();
+renderNewGamesSlider();
