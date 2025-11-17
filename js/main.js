@@ -1,196 +1,158 @@
-// ====== Game Data ======
+// =======================
+// Define games
+// =======================
 const games = [
   {
     name: "CloudMoonApp",
-    url: "https://web.cloudmoonapp.com/",
+    url: "games/cloudmoonapp/index.html",
     image: "images/cloudmoonapp-icon.png",
     videos: ["images/cloudmoon-preview1.mp4","images/cloudmoon-preview2.mp4","images/cloudmoon-preview3.mp4"],
     tags: ["website"],
     creator: "Cloud Team",
     lastUpdated: "2023-05-15",
     description: "Cloud gaming service."
-  },
-  {
-    name: "Shooter Mania",
-    url: "games/shooter.html",
-    image: "images/shooter-icon.png",
-    videos: ["images/shooter-preview1.mp4","images/shooter-preview2.mp4","images/shooter-preview3.mp4"],
-    tags: ["shooter"],
-    creator: "ShooterDev",
-    lastUpdated: "2024-03-20",
-    description: "Fast-paced shooting game."
   }
+  // Add more games here
 ];
 
-// ====== DOM Elements ======
-const gameGrid = document.getElementById('gameGrid');
-const searchBar = document.getElementById('searchBar');
-const gameContainer = document.getElementById('gameContainer');
-const gameFrame = document.getElementById('gameFrame');
-const backBtn = document.getElementById('backBtn');
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-const randomGamesDiv = document.getElementById('randomGames');
-const gameDescription = document.getElementById('gameDescription');
-const gameCreator = document.getElementById('gameCreator');
-const gameLastUpdated = document.getElementById('gameLastUpdated');
-const gameTags = document.getElementById('gameTags');
-const newGamesContainer = document.getElementById('newGamesContainer');
-const shareModal = document.getElementById('shareModal');
-const shareBtn = document.getElementById('shareBtn');
-const shareLink = document.getElementById('shareLink');
-const copyBtn = document.getElementById('copyBtn');
-const closeShare = document.getElementById('closeShare');
+// =======================
+// Hub Page
+// =======================
+if(window.location.pathname.endsWith("index.html") || window.location.pathname === "/"){
 
-// ====== Render Hub Games ======
-function renderGames() {
-  gameGrid.innerHTML = '';
-  const filter = searchBar.value.toLowerCase();
-  games.forEach(game => {
-    if(game.name.toLowerCase().includes(filter)){
-      const card = document.createElement('div'); card.className = 'game-card';
-      const img = document.createElement('img'); img.src = game.image;
+  const gameGrid = document.getElementById("gameGrid");
+  const newGamesContainer = document.getElementById("newGamesContainer");
+  const searchBar = document.getElementById("searchBar");
+
+  function renderGames(){
+    gameGrid.innerHTML = "";
+    games.forEach(game => {
+      const card = document.createElement("div");
+      card.className = "game-card";
+      const img = document.createElement("img");
+      img.src = game.image;
       card.appendChild(img);
 
-      // Hover preview videos
-      let videoIndex = 0;
-      let hoverInterval = null;
-      card.addEventListener('mouseenter', ()=>{
-        if(game.videos.length>0){
-          const video = document.createElement('video');
-          video.src = game.videos[videoIndex];
-          video.muted = true;
-          video.autoplay = true;
-          video.loop = false;
-          card.replaceChild(video,img);
-          hoverInterval = setInterval(()=>{
-            videoIndex = (videoIndex+1) % game.videos.length;
-            video.src = game.videos[videoIndex];
-            video.play();
-          }, 4000);
-        }
-      });
-      card.addEventListener('mouseleave', ()=>{
-        if(hoverInterval) clearInterval(hoverInterval);
-        card.replaceChild(img, card.querySelector('video'));
-      });
+      const name = document.createElement("h4");
+      name.textContent = game.name;
+      card.appendChild(name);
 
-      card.addEventListener('click', ()=>{
-        openGame(game);
+      card.addEventListener("click", ()=>{
+        window.location.href = "game.html?game=" + encodeURIComponent(game.name);
       });
 
       gameGrid.appendChild(card);
-    }
+    });
+  }
+
+  function renderNewGames(){
+    newGamesContainer.innerHTML = "";
+    const lastGames = games.slice(-15).reverse();
+    lastGames.forEach(game=>{
+      const card = document.createElement("div");
+      card.className = "game-card";
+      const img = document.createElement("img");
+      img.src = game.image;
+      card.appendChild(img);
+      newGamesContainer.appendChild(card);
+    });
+  }
+
+  searchBar.addEventListener("input", ()=>{
+    const text = searchBar.value.toLowerCase();
+    gameGrid.childNodes.forEach(card=>{
+      const name = card.querySelector("h4").textContent.toLowerCase();
+      card.style.display = name.includes(text) ? "flex" : "none";
+    });
   });
+
+  renderGames();
+  renderNewGames();
 }
 
-// ====== Open Game ======
-function openGame(game){
-  gameContainer.style.display = 'flex';
-  gameFrame.src = game.url;
-  gameDescription.textContent = game.description;
-  gameCreator.textContent = "Creator: " + game.creator;
-  gameLastUpdated.textContent = "Last Updated: " + game.lastUpdated;
-  gameTags.textContent = "Tags: " + game.tags.join(", ");
-  renderRandomGames();
-}
+// =======================
+// Game Page
+// =======================
+if(window.location.pathname.includes("game.html")){
+  const params = new URLSearchParams(window.location.search);
+  const gameName = params.get("game");
+  const game = games.find(g => g.name === gameName);
 
-// ====== Right Sidebar Random Games ======
-function renderRandomGames(){
-  randomGamesDiv.innerHTML='';
-  const shuffled = [...games].sort(()=>0.5-Math.random()).slice(0,20);
-  shuffled.forEach(g=>{
-    const card = document.createElement('div'); card.className='random-game-card';
-    const img = document.createElement('img'); img.src=g.image;
-    const overlay = document.createElement('div'); overlay.className='random-game-overlay'; overlay.textContent=g.name;
-    card.appendChild(img); card.appendChild(overlay);
+  if(game){
+    const iframe = document.getElementById("gameFrame");
+    iframe.src = game.url;
 
-    // Hover video
-    let videoIndex = 0;
-    let hoverInterval = null;
-    card.addEventListener('mouseenter',()=>{
-      if(g.videos.length>0){
-        const video = document.createElement('video');
-        video.src = g.videos[videoIndex];
-        video.muted=true; video.autoplay=true; video.loop=false;
-        card.replaceChild(video,img);
-        hoverInterval = setInterval(()=>{
-          videoIndex = (videoIndex+1)%g.videos.length;
-          video.src = g.videos[videoIndex];
-          video.play();
-        },4000);
+    document.getElementById("gameName").textContent = game.name;
+    document.getElementById("gameDescription").textContent = game.description;
+    document.getElementById("gameCreator").textContent = "Creator: "+game.creator;
+    document.getElementById("gameLastUpdated").textContent = "Last Updated: "+game.lastUpdated;
+    document.getElementById("gameTags").textContent = "Tags: "+game.tags.join(", ");
+
+    // Random games list
+    const randomContainer = document.getElementById("randomGames");
+    randomContainer.innerHTML = "";
+    const shuffled = games.sort(()=>0.5 - Math.random()).slice(0,15);
+    shuffled.forEach(g=>{
+      const div = document.createElement("div");
+      div.className = "game-card";
+      const img = document.createElement("img");
+      img.src = g.image;
+      div.appendChild(img);
+      const name = document.createElement("h5");
+      name.textContent = g.name;
+      div.appendChild(name);
+      div.addEventListener("click", ()=>{
+        window.location.href = "game.html?game="+encodeURIComponent(g.name);
+      });
+      randomContainer.appendChild(div);
+    });
+
+    // Share modal
+    const shareBtn = document.getElementById("shareBtn");
+    const modal = document.getElementById("shareModal");
+    const shareLink = document.getElementById("shareLink");
+    const copyBtn = document.getElementById("copyBtn");
+    const closeShare = document.getElementById("closeShare");
+
+    shareBtn.addEventListener("click", ()=>{
+      shareLink.value = window.location.href;
+      modal.style.display = "block";
+    });
+    copyBtn.addEventListener("click", ()=>{
+      shareLink.select();
+      document.execCommand("copy");
+      alert("Copied to clipboard!");
+    });
+    closeShare.addEventListener("click", ()=>{
+      modal.style.display = "none";
+    });
+
+    // Back button
+    document.getElementById("backBtn").addEventListener("click", ()=>{
+      window.location.href = "index.html";
+    });
+
+    // Fullscreen
+    document.getElementById("fullscreenBtn").addEventListener("click", ()=>{
+      if(iframe.requestFullscreen) iframe.requestFullscreen();
+    });
+
+    // Favorite button
+    const favoriteBtn = document.getElementById("favoriteBtn");
+    favoriteBtn.addEventListener("click", ()=>{
+      const favorites = JSON.parse(localStorage.getItem("favorites")||"[]");
+      if(favorites.includes(game.name)){
+        favorites.splice(favorites.indexOf(game.name),1);
+        favoriteBtn.textContent = "☆";
+      } else {
+        favorites.push(game.name);
+        favoriteBtn.textContent = "★";
       }
-    });
-    card.addEventListener('mouseleave',()=>{
-      if(hoverInterval) clearInterval(hoverInterval);
-      if(card.querySelector('video')) card.replaceChild(img, card.querySelector('video'));
+      localStorage.setItem("favorites",JSON.stringify(favorites));
     });
 
-    card.addEventListener('click', ()=> openGame(g));
-    randomGamesDiv.appendChild(card);
-  });
+    // Load favorite state
+    const favorites = JSON.parse(localStorage.getItem("favorites")||"[]");
+    if(favorites.includes(game.name)) favoriteBtn.textContent = "★";
+  }
 }
-
-// ====== New Games Slider ======
-function renderNewGamesSlider(){
-  newGamesContainer.innerHTML='';
-  const newGames = games.slice(-15).reverse();
-  newGames.forEach(game=>{
-    const card = document.createElement('div'); card.className='new-game-card';
-    const img = document.createElement('img'); img.src = game.image;
-    const overlay = document.createElement('div'); overlay.className='new-game-overlay'; overlay.textContent=game.name;
-    card.appendChild(img); card.appendChild(overlay);
-
-    let videoIndex=0;
-    let hoverInterval=null;
-    card.addEventListener('mouseenter',()=>{
-      if(game.videos.length>0){
-        const video = document.createElement('video');
-        video.src = game.videos[videoIndex];
-        video.muted=true; video.autoplay=true; video.loop=false;
-        card.replaceChild(video,img);
-        hoverInterval=setInterval(()=>{
-          videoIndex=(videoIndex+1)%game.videos.length;
-          video.src = game.videos[videoIndex];
-          video.play();
-        },4000);
-      }
-    });
-    card.addEventListener('mouseleave',()=>{
-      if(hoverInterval) clearInterval(hoverInterval);
-      if(card.querySelector('video')) card.replaceChild(img, card.querySelector('video'));
-    });
-
-    card.addEventListener('click', ()=> openGame(game));
-    newGamesContainer.appendChild(card);
-  });
-}
-
-// ====== Share Modal ======
-shareBtn.addEventListener('click', ()=>{
-  shareModal.style.display='block';
-  shareLink.value = window.location.href+"#"+gameFrame.src;
-});
-copyBtn.addEventListener('click', ()=>{
-  shareLink.select();
-  document.execCommand('copy');
-});
-closeShare.addEventListener('click', ()=>{
-  shareModal.style.display='none';
-});
-
-// ====== Controls ======
-backBtn.addEventListener('click', ()=>{
-  gameContainer.style.display='none';
-  gameFrame.src='';
-});
-fullscreenBtn.addEventListener('click', ()=>{
-  if(gameFrame.requestFullscreen) gameFrame.requestFullscreen();
-});
-
-// ====== Search ======
-searchBar.addEventListener('input', renderGames);
-
-// ====== Initial Render ======
-renderGames();
-renderRandomGames();
-renderNewGamesSlider();
