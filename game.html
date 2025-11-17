@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="game-page-container">
+
   <div class="game-frame-container">
     <iframe id="gameFrame" allowfullscreen></iframe>
     <div class="game-controls">
@@ -21,13 +21,13 @@
   <div class="right-sidebar">
     <img src="images/ad-placeholder.png" alt="Ad" class="ad-image">
     <h4>Random Games</h4>
-    <div id="randomGames"></div>
+    <div id="randomGames" class="random-games-list"></div>
   </div>
 
   <div class="game-info">
     <h2 id="gameName"></h2>
     <button id="shareBtn">Share</button>
-    <div id="shareModal">
+    <div id="shareModal" class="modal">
       <input type="text" id="shareLink" readonly>
       <button id="copyBtn">Copy</button>
       <button id="closeShare">Close</button>
@@ -37,6 +37,7 @@
     <p id="gameLastUpdated"></p>
     <p id="gameTags"></p>
   </div>
+
 </div>
 
 <script src="main.js"></script>
