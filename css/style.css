@@ -1,5 +1,8 @@
-# © 2025 Winston Harry Roger Sjöstrand. All rights reserved.
-# No part of this code may be used, copied, or distributed without permission.
+/* 
+© 2025 Winston Harry Roger Sjöstrand. All rights reserved.
+No part of this code may be used, copied, or distributed without permission.
+*/
+
 /* General Styles */
 body, html {
   margin: 0;
@@ -149,3 +152,15 @@ header {
   background: #222;
   padding: 20px;
   border-radius: 10px;
+  z-index: 1000;
+}
+
+.modal input {
+  width: 300px;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.modal button {
+  padding: 5px 10px;
+}
