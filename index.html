@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>My Game Hub</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -71,8 +71,8 @@ header h1{margin:0;font-size:20px;}
 
     <div id="gameAreaWrap">
       <div id="gameList">
-        <!-- Game 1 -->
-        <div class="game" data-id="geometrydash" data-url=games/geometry dash.html" data-tags="website" data-desc="Block jumping">
+        <!-- Geometry Dash local HTML game -->
+        <div class="game" data-id="geometrydash" data-url="games/geometry dash.html" data-tags="website" data-desc="Block jumping">
           <div class="favoriteStar">⭐</div>
           <button class="menuBtn">⋮</button>
           <div class="menuPopup">
@@ -84,21 +84,6 @@ header h1{margin:0;font-size:20px;}
           <div class="tagBadges"></div>
           <button class="playBtn">Play</button>
         </div>
-
-        <!-- Game 2 -->
-        <div class="game" data-id="cloudmoonapp" data-url="https://web.cloudmoonapp.com/" data-tags="website" data-desc="Cloud gaming service.">
-          <div class="favoriteStar">⭐</div>
-          <button class="menuBtn">⋮</button>
-          <div class="menuPopup">
-            <button class="descBtn">Description</button>
-            <button class="favBtn">Add to Favorites</button>
-          </div>
-          <img class="gameIcon" src="images/cloudmoonapp-icon.png" alt="CloudMoonApp">
-          <div class="gameTitle">CloudMoonApp</div>
-          <div class="tagBadges"></div>
-          <button class="playBtn">Play</button>
-        </div>
-
       </div>
     </div>
   </div>
@@ -137,13 +122,13 @@ header h1{margin:0;font-size:20px;}
 <script>
 // ---------- Configuration ----------
 const GOOGLE_CLIENT_ID = "202765528482-vcrnpmmalmt47qcvhrdr7uqtpc8sc5cs.apps.googleusercontent.com";
-const ASPECT_RATIO = 16/9; // change to match your games if different
+const ASPECT_RATIO = 16/9;
 
 // ---------- State ----------
 let userLoggedIn = false;
 let currentGame = null;
 
-// ---------- Helpers: favorites ----------
+// ---------- Favorites ----------
 const FAVS_KEY = 'hub_favorites_v1';
 function loadFavs(){ try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || {}; } catch(e){ return {}; } }
 function saveFavs(obj){ localStorage.setItem(FAVS_KEY, JSON.stringify(obj)); }
@@ -158,10 +143,9 @@ function refreshFavs(){
   });
 }
 
-// ---------- Google Sign-In init & handlers ----------
+// ---------- Google Sign-In ----------
 function initGoogle(){
   userLoggedIn = !!localStorage.getItem('googleUser');
-
   google.accounts.id.initialize({
     client_id: GOOGLE_CLIENT_ID,
     callback: handleCredentialResponse
@@ -171,27 +155,22 @@ function initGoogle(){
     { theme: "outline", size: "large", width: 280 }
   );
 }
-
 function handleCredentialResponse(response){
   if(response && response.credential){
     localStorage.setItem('googleUser', response.credential);
     userLoggedIn = true;
-    // hide login UI
     document.getElementById('loginPopup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
-    // open the game that triggered login (if any)
     if(currentGame) { openGame(currentGame); currentGame = null; }
   }
 }
 
-// ---------- UI: initial state ----------
+// ---------- UI Init ----------
 window.addEventListener('load', ()=>{
-  // Make sure popups & game container are hidden initially
   document.getElementById('gameContainer').style.display = 'none';
   document.getElementById('overlay').style.display = 'none';
   document.getElementById('loginPopup').style.display = 'none';
   document.getElementById('descPopup').style.display = 'none';
-
   initGoogle();
   initTagSearch();
   initSearchByTitle();
@@ -199,20 +178,16 @@ window.addEventListener('load', ()=>{
   refreshFavs();
 });
 
-// ---------- Tag search (autocomplete + filter) ----------
+// ---------- Tag search ----------
 function initTagSearch(){
   const tagInput = document.getElementById('tagSearch');
   const allGamesBtn = document.getElementById('allGamesBtn');
-
-  // collect tags from code
   let tagSet = new Set();
   document.querySelectorAll('.game').forEach(g=>{
     if(!g.dataset.tags) return;
     g.dataset.tags.split(',').map(t=>t.trim().toLowerCase()).forEach(t=>{ if(t) tagSet.add(t); });
   });
   const allTags = Array.from(tagSet);
-
-  // dropdown
   const tagDropdown = document.createElement('div');
   tagDropdown.style.position = 'absolute';
   tagDropdown.style.background = '#222';
@@ -268,7 +243,6 @@ function initTagSearch(){
     tagDropdown.style.display = 'none';
   });
 
-  // show favorites button
   document.getElementById('showFavoritesBtn').addEventListener('click', ()=>{
     const favs = loadFavs();
     document.querySelectorAll('.game').forEach(g=>{
@@ -292,7 +266,6 @@ function initSearchByTitle(){
 // ---------- Game card behaviors ----------
 function initGameCards(){
   document.querySelectorAll('.game').forEach(g=>{
-    // render tag badges
     const badgeWrap = g.querySelector('.tagBadges');
     badgeWrap.innerHTML = '';
     if(g.dataset.tags){
@@ -341,7 +314,6 @@ function initGameCards(){
       refreshFavs();
     });
 
-    // Play button — if not logged in, show login popup; otherwise open game
     playBtn.addEventListener('click', ()=>{
       if(!userLoggedIn){
         currentGame = g;
@@ -353,15 +325,12 @@ function initGameCards(){
     });
   });
 
-  // close menus on outside click
   document.body.addEventListener('click', ()=> document.querySelectorAll('.menuPopup').forEach(p=> p.style.display='none') );
 
-  // description close
   document.getElementById('descCloseBtn').addEventListener('click', ()=> {
     document.getElementById('descPopup').style.display = 'none';
   });
 
-  // login popup close (X)
   document.getElementById('loginCloseBtn').addEventListener('click', ()=> {
     document.getElementById('loginPopup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
@@ -369,46 +338,6 @@ function initGameCards(){
   });
 }
 
-// ---------- Open game iframe (fits by aspect ratio) ----------
+// ---------- Open game iframe ----------
 function openGame(game){
-  const iframe = document.getElementById('gameFrame');
-  document.getElementById('currentGameLabel').innerText = game.querySelector('.gameTitle').innerText;
-  document.getElementById('gameContainer').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  iframe.src = game.dataset.url;
-  resizeGameFrame();
-}
-
-// ---------- Back & Fullscreen ----------
-document.getElementById('backBtn').addEventListener('click', ()=>{
-  document.getElementById('gameContainer').style.display = 'none';
-  document.getElementById('gameFrame').src = '';
-  document.body.style.overflow = 'auto';
-});
-
-document.getElementById('fullscreenBtn').addEventListener('click', ()=>{
-  const iframe = document.getElementById('gameFrame');
-  if(iframe.requestFullscreen) iframe.requestFullscreen();
-});
-
-// ---------- Resize iframe keeping aspect ratio ----------
-function resizeGameFrame(){
-  const iframe = document.getElementById('gameFrame');
-  const container = document.getElementById('gameContainerInner');
-  const containerWidth = container.clientWidth;
-  const containerHeight = container.clientHeight;
-  let width = containerWidth;
-  let height = width / ASPECT_RATIO;
-  if(height > containerHeight){
-    height = containerHeight;
-    width = height * ASPECT_RATIO;
-  }
-  iframe.style.width = Math.floor(width) + 'px';
-  iframe.style.height = Math.floor(height) + 'px';
-}
-window.addEventListener('resize', resizeGameFrame);
-
-// ---------- End ----------
-</script>
-</body>
-</html>
+  const iframe
