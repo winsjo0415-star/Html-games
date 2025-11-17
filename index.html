@@ -122,7 +122,6 @@ header h1{margin:0;font-size:20px;}
 <script>
 // ---------- Configuration ----------
 const GOOGLE_CLIENT_ID = "202765528482-vcrnpmmalmt47qcvhrdr7uqtpc8sc5cs.apps.googleusercontent.com";
-const ASPECT_RATIO = 16/9;
 
 // ---------- State ----------
 let userLoggedIn = false;
@@ -165,151 +164,100 @@ function handleCredentialResponse(response){
   }
 }
 
-// ---------- UI Init ----------
-window.addEventListener('load', ()=>{
-  document.getElementById('gameContainer').style.display = 'none';
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('loginPopup').style.display = 'none';
-  document.getElementById('descPopup').style.display = 'none';
-  initGoogle();
-  initTagSearch();
-  initSearchByTitle();
-  initGameCards();
-  refreshFavs();
+// ---------- Utility ----------
+function showOverlay(show){ document.getElementById('overlay').style.display = show?'block':'none'; }
+function openGame(game){
+  document.getElementById('gameContainer').style.display = 'flex';
+  document.getElementById('gameFrame').src = game.dataset.url;
+  document.getElementById('currentGameLabel').innerText = game.querySelector('.gameTitle').innerText;
+  document.body.style.overflow = 'hidden';
+}
+
+// ---------- Close game ----------
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  document.getElementById('gameContainer').style.display='none';
+  document.getElementById('gameFrame').src='';
+  document.body.style.overflow='auto';
+});
+document.getElementById('fullscreenBtn').addEventListener('click', ()=>{
+  const iframe = document.getElementById('gameFrame');
+  if(iframe.requestFullscreen) iframe.requestFullscreen();
+  else if(iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+  else if(iframe.msRequestFullscreen) iframe.msRequestFullscreen();
 });
 
-// ---------- Tag search ----------
-function initTagSearch(){
-  const tagInput = document.getElementById('tagSearch');
-  const allGamesBtn = document.getElementById('allGamesBtn');
-  let tagSet = new Set();
-  document.querySelectorAll('.game').forEach(g=>{
-    if(!g.dataset.tags) return;
-    g.dataset.tags.split(',').map(t=>t.trim().toLowerCase()).forEach(t=>{ if(t) tagSet.add(t); });
-  });
-  const allTags = Array.from(tagSet);
-  const tagDropdown = document.createElement('div');
-  tagDropdown.style.position = 'absolute';
-  tagDropdown.style.background = '#222';
-  tagDropdown.style.border = '1px solid #444';
-  tagDropdown.style.borderRadius = '6px';
-  tagDropdown.style.zIndex = '950';
-  tagDropdown.style.maxHeight = '160px';
-  tagDropdown.style.overflowY = 'auto';
-  tagDropdown.style.display = 'none';
-  document.getElementById('tagPanel').appendChild(tagDropdown);
+// ---------- Initialize ----------
+window.addEventListener('load', ()=>{
+  refreshFavs();
+  initGameCards();
+  initSearch();
+  initTagSearch();
+  initGoogle();
+});
 
-  function positionDropdown(){
-    const rect = tagInput.getBoundingClientRect();
-    const panelRect = document.getElementById('tagPanel').getBoundingClientRect();
-    tagDropdown.style.left = (rect.left - panelRect.left) + 'px';
-    tagDropdown.style.top = (rect.bottom - panelRect.top + 4) + 'px';
-    tagDropdown.style.width = rect.width + 'px';
-  }
-  window.addEventListener('resize', positionDropdown);
-  tagInput.addEventListener('focus', positionDropdown);
-
-  tagInput.addEventListener('input', ()=>{
-    const val = tagInput.value.trim().toLowerCase();
-    tagDropdown.innerHTML = '';
-    if(!val){ tagDropdown.style.display = 'none'; showAllGames(); return; }
-    const matches = allTags.filter(t => t.includes(val));
-    if(matches.length === 0){ tagDropdown.style.display = 'none'; return; }
-    matches.forEach(t=>{
-      const div = document.createElement('div');
-      div.style.padding = '6px 8px';
-      div.style.cursor = 'pointer';
-      div.style.color = '#ddd';
-      div.innerText = t;
-      div.addEventListener('click', ()=>{ applyTagFilter(t); tagInput.value = t; tagDropdown.style.display = 'none'; });
-      tagDropdown.appendChild(div);
-    });
-    positionDropdown();
-    tagDropdown.style.display = 'block';
-  });
-
-  function applyTagFilter(tag){
-    document.querySelectorAll('.game').forEach(g=>{
-      const tags = (g.dataset.tags || '').toLowerCase().split(',').map(x=>x.trim()).filter(Boolean);
-      g.style.display = tags.includes(tag.toLowerCase()) ? 'inline-block' : 'none';
-    });
-  }
-  function showAllGames(){
-    document.querySelectorAll('.game').forEach(g=> g.style.display = 'inline-block' );
-  }
-  allGamesBtn.addEventListener('click', ()=>{
-    tagInput.value = '';
-    showAllGames();
-    tagDropdown.style.display = 'none';
-  });
-
-  document.getElementById('showFavoritesBtn').addEventListener('click', ()=>{
-    const favs = loadFavs();
-    document.querySelectorAll('.game').forEach(g=>{
-      g.style.display = favs[g.dataset.id] ? 'inline-block' : 'none';
-    });
-  });
-}
-
-// ---------- Title search ----------
-function initSearchByTitle(){
+function initSearch(){
   const searchBar = document.getElementById('searchBar');
-  searchBar.addEventListener('input', e=>{
-    const q = e.target.value.toLowerCase();
+  searchBar.addEventListener('input', ()=>{
+    const q = searchBar.value.toLowerCase();
     document.querySelectorAll('.game').forEach(g=>{
-      const title = (g.querySelector('.gameTitle')?.innerText || '').toLowerCase();
-      g.style.display = title.includes(q) ? 'inline-block' : 'none';
+      const title = (g.querySelector('.gameTitle')?.innerText||'').toLowerCase();
+      g.style.display = title.includes(q)?'inline-block':'none';
     });
   });
 }
 
-// ---------- Game card behaviors ----------
+// ---------- Tags ----------
+function initTagSearch(){
+  const input = document.getElementById('tagSearch');
+  const allGamesBtn = document.getElementById('allGamesBtn');
+  const showFavBtn = document.getElementById('showFavoritesBtn');
+
+  allGamesBtn.addEventListener('click', ()=>{
+    input.value='';
+    document.querySelectorAll('.game').forEach(g=> g.style.display='inline-block');
+  });
+  showFavBtn.addEventListener('click', ()=>{
+    const favs = loadFavs();
+    document.querySelectorAll('.game').forEach(g=> g.style.display=favs[g.dataset.id]?'inline-block':'none');
+  });
+}
+
+// ---------- Game cards ----------
 function initGameCards(){
   document.querySelectorAll('.game').forEach(g=>{
-    const badgeWrap = g.querySelector('.tagBadges');
-    badgeWrap.innerHTML = '';
-    if(g.dataset.tags){
-      g.dataset.tags.split(',').map(t=>t.trim()).filter(Boolean).forEach(tag=>{
-        const s = document.createElement('span');
-        s.className = 'tagBadge';
-        s.innerText = tag;
-        badgeWrap.appendChild(s);
-      });
-    }
-
     const menuBtn = g.querySelector('.menuBtn');
     const popup = g.querySelector('.menuPopup');
-    const descBtn = popup.querySelector('.descBtn');
-    const favBtn = popup.querySelector('.favBtn');
+    const descBtn = g.querySelector('.descBtn');
+    const favBtn = g.querySelector('.favBtn');
     const star = g.querySelector('.favoriteStar');
     const playBtn = g.querySelector('.playBtn');
 
     menuBtn.addEventListener('click', e=>{
       e.stopPropagation();
-      document.querySelectorAll('.menuPopup').forEach(p=>{ if(p !== popup) p.style.display = 'none'; });
-      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+      document.querySelectorAll('.menuPopup').forEach(p=>{ if(p!==popup) p.style.display='none'; });
+      popup.style.display = popup.style.display==='block'?'none':'block';
     });
 
     descBtn.addEventListener('click', ()=>{
       document.getElementById('descTitle').innerText = g.querySelector('.gameTitle').innerText;
       document.getElementById('descText').innerText = g.dataset.desc || 'No description';
-      document.getElementById('descPopup').style.display = 'block';
+      document.getElementById('descPopup').style.display='block';
     });
 
     favBtn.addEventListener('click', ()=>{
       const favs = loadFavs();
       if(favs[g.dataset.id]) delete favs[g.dataset.id];
-      else favs[g.dataset.id] = true;
+      else favs[g.dataset.id]=true;
       saveFavs(favs);
       refreshFavs();
-      popup.style.display = 'none';
+      popup.style.display='none';
     });
 
     star.addEventListener('click', e=>{
       e.stopPropagation();
       const favs = loadFavs();
       if(favs[g.dataset.id]) delete favs[g.dataset.id];
-      else favs[g.dataset.id] = true;
+      else favs[g.dataset.id]=true;
       saveFavs(favs);
       refreshFavs();
     });
@@ -317,27 +265,19 @@ function initGameCards(){
     playBtn.addEventListener('click', ()=>{
       if(!userLoggedIn){
         currentGame = g;
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('loginPopup').style.display = 'block';
-      } else {
-        openGame(g);
-      }
+        document.getElementById('overlay').style.display='block';
+        document.getElementById('loginPopup').style.display='block';
+      } else openGame(g);
     });
   });
-
-  document.body.addEventListener('click', ()=> document.querySelectorAll('.menuPopup').forEach(p=> p.style.display='none') );
-
-  document.getElementById('descCloseBtn').addEventListener('click', ()=> {
-    document.getElementById('descPopup').style.display = 'none';
-  });
-
-  document.getElementById('loginCloseBtn').addEventListener('click', ()=> {
-    document.getElementById('loginPopup').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+  document.body.addEventListener('click', ()=>document.querySelectorAll('.menuPopup').forEach(p=>p.style.display='none'));
+  document.getElementById('descCloseBtn').addEventListener('click',()=>document.getElementById('descPopup').style.display='none');
+  document.getElementById('loginCloseBtn').addEventListener('click', ()=>{
+    document.getElementById('loginPopup').style.display='none';
+    document.getElementById('overlay').style.display='none';
     currentGame = null;
   });
 }
-
-// ---------- Open game iframe ----------
-function openGame(game){
-  const iframe
+</script>
+</body>
+</html>
