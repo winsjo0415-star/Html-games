@@ -3,71 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Game Hub</title>
-<link rel="stylesheet" href="css/style.css">
+<title>My Game Hub</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <header>
-  <h1>Ultimate Game Hub</h1>
+  <h1>My Game Hub</h1>
   <input type="text" id="searchBar" placeholder="Search games...">
-  <div class="profile-btn" id="profileBtn">
-    <img src="images/default-profile.png" alt="Profile">
-    <div class="profile-menu" id="profileMenu">
-      <div>Total time spent: <span id="timeSpent">0</span>s</div>
-      <button id="signOutBtn">Sign Out</button>
-    </div>
-  </div>
 </header>
 
-<!-- New Games Slider -->
+<div id="gameGrid" class="main-grid"></div>
+
 <div class="new-games-slider">
   <h3>New Games</h3>
   <div id="newGamesContainer"></div>
 </div>
 
-<div class="sidebar">
-  <h3>Tags</h3>
-  <input type="text" id="tagSearch" placeholder="Filter tags..." disabled>
-  <div id="tagButtons"></div>
-</div>
-
-<main id="gameGrid"></main>
-
-<!-- Game Viewer -->
-<div id="gameContainer">
-  <div class="controls">
-    <button id="backBtn">Back</button>
-    <button id="fullscreenBtn">Fullscreen</button>
-  </div>
-  <div class="game-content">
-    <iframe id="gameFrame" allowfullscreen></iframe>
-    <div class="right-sidebar">
-      <h4>Random Games</h4>
-      <div id="randomGames"></div>
-      <img id="sideAd" src="images/ad1.png" alt="Ad">
-    </div>
-    <div class="description-section">
-      <div class="share-section">
-        <button id="shareBtn">Share</button>
-      </div>
-      <p id="gameDescription"></p>
-      <p id="gameCreator"></p>
-      <p id="gameLastUpdated"></p>
-      <p id="gameTags"></p>
-      <img id="bottomAdLeft" src="images/ad2.png" alt="Ad">
-      <img id="bottomAdRight" src="images/ad1.png" alt="Ad">
-    </div>
-  </div>
-</div>
-
-<!-- Share Modal -->
-<div id="shareModal">
-  <input type="text" id="shareLink" readonly>
-  <button id="copyBtn">Copy</button>
-  <button id="closeShare">X</button>
-</div>
-
-<script src="js/main.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
