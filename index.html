@@ -46,7 +46,7 @@ header h1{margin:0;font-size:20px;}
 #descPopup p{margin:0 0 12px 0;color:#ddd;white-space:pre-wrap;}
 .favoriteStar{position:absolute;top:10px;left:10px;font-size:22px;display:none;color:gold;cursor:pointer;pointer-events:auto;text-shadow:0 0 6px rgba(0,0,0,.7);transition:transform .2s;}
 .favoriteStar:hover{transform:scale(1.2);}
-#gameContainer{display:none;position:fixed;inset:0;z-index:1002;background:#000;align-items:center;justify-content:center;display:flex;}
+#gameContainer{display:none;position:fixed;inset:0;z-index:1002;background:#000;align-items:center;justify-content:center;}
 #gameContainerInner{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
 #gameFrame{border:none;max-width:100%;max-height:100%;width:auto;height:auto;background:#000;}
 @media(max-width:800px){#tagPanel{display:none;}#searchBar{width:88%;}.game{width:45%;}}
@@ -71,7 +71,7 @@ header h1{margin:0;font-size:20px;}
 
     <div id="gameAreaWrap">
       <div id="gameList">
-        <!-- Geometry Dash local HTML game -->
+        <!-- Example local HTML game -->
         <div class="game" data-id="geometrydash" data-url="games/geometry dash.html" data-tags="website" data-desc="Block jumping">
           <div class="favoriteStar">⭐</div>
           <button class="menuBtn">⋮</button>
@@ -188,11 +188,15 @@ document.getElementById('fullscreenBtn').addEventListener('click', ()=>{
 
 // ---------- Initialize ----------
 window.addEventListener('load', ()=>{
-  refreshFavs();
-  initGameCards();
-  initSearch();
-  initTagSearch();
+  document.getElementById('gameContainer').style.display = 'none'; // ensure hub is default
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('loginPopup').style.display = 'none';
+  document.getElementById('descPopup').style.display = 'none';
   initGoogle();
+  initTagSearch();
+  initSearch();
+  initGameCards();
+  refreshFavs();
 });
 
 function initSearch(){
@@ -281,3 +285,4 @@ function initGameCards(){
 </script>
 </body>
 </html>
+
