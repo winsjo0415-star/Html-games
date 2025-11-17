@@ -4,250 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ultimate Game Hub</title>
-<style>
-  /* Base reset */
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Arial', sans-serif; background:#1a1a1a; color:#fff; overflow-x:hidden; }
-  a { text-decoration:none; color:inherit; }
-
-  /* Header */
-  header { display:flex; justify-content:space-between; align-items:center; padding:15px 30px; background:#222; position:sticky; top:0; z-index:100; }
-  header h1 { font-size:2em; letter-spacing:1px; }
-  .search-bar { padding:10px; width:300px; border-radius:5px; border:none; outline:none; transition:0.3s; }
-  .search-bar:focus { box-shadow:0 0 10px #0ff; }
-
-  /* Profile Button */
-  .profile-btn { width:40px; height:40px; border-radius:50%; cursor:pointer; overflow:hidden; position:relative; transition:0.3s; }
-  .profile-btn img { width:100%; height:100%; object-fit:cover; }
-  .profile-menu { position:absolute; right:0; top:50px; background:#2a2a2a; border-radius:10px; display:none; flex-direction:column; min-width:200px; box-shadow:0 0 15px #000; }
-  .profile-menu div, .profile-menu button { padding:10px 15px; cursor:pointer; transition:0.2s; }
-  .profile-menu div:hover, .profile-menu button:hover { background:#333; }
-
-  /* Sidebar */
-  .sidebar { width:220px; background:#222; padding:20px; position:fixed; top:70px; bottom:0; overflow-y:auto; }
-  .sidebar h3 { margin-bottom:10px; font-size:1.2em; color:#0ff; text-align:center; }
-  .sidebar input { width:100%; padding:5px 8px; margin-bottom:10px; border-radius:5px; border:none; outline:none; }
-  .tag-btn { width:100%; padding:8px 10px; margin-bottom:10px; border:none; border-radius:5px; cursor:pointer; background:#333; color:#fff; transition:0.2s; text-align:left; }
-  .tag-btn:hover { background:#0ff; color:#000; }
-
-  /* Main Grid */
-  main { margin-left:240px; padding:20px; display:flex; flex-wrap:wrap; justify-content:flex-start; gap:20px; transition:0.5s; }
-
-  /* Game Card */
-  .game-card { background:#222; width:200px; border-radius:10px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:0.3s, transform 0.5s; position:relative; }
-  .game-card:hover { transform:scale(1.05) rotateX(2deg) rotateY(2deg); box-shadow:0 10px 20px #0ff33c44; }
-  .game-card img { width:100%; height:120px; object-fit:cover; }
-  .content { padding:10px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between; }
-  .content h4 { margin-bottom:5px; font-size:1.1em; }
-  .tags { font-size:0.8em; color:#aaa; margin-bottom:8px; display:flex; flex-wrap:wrap; gap:4px; }
-  .tag { background:#333; padding:2px 5px; border-radius:3px; font-size:0.7em; }
-
-  /* Card Buttons */
-  .card-buttons { display:flex; justify-content:space-between; align-items:center; }
-  .play-btn, .menu-btn { padding:5px 10px; border:none; border-radius:5px; cursor:pointer; background:#444; color:white; transition:0.2s; }
-  .play-btn:hover, .menu-btn:hover { background:#0ff; color:#000; }
-  .menu-btn { border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-weight:bold; }
-
-  /* Ellipsis Menu */
-  .ellipsis-menu { position:absolute; top:40px; right:10px; background:#333; border-radius:10px; display:none; flex-direction:column; min-width:140px; box-shadow:0 5px 15px #000; z-index:10; }
-  .ellipsis-menu button { padding:8px 12px; text-align:left; border:none; background:none; color:#fff; cursor:pointer; transition:0.2s; }
-  .ellipsis-menu button:hover { background:#0ff; color:#000; }
-
-  /* Favorites */
-  .favorite { position:absolute; top:10px; right:10px; font-size:20px; color:gold; cursor:pointer; display:none; transition:0.3s; }
-  .favorite:hover { transform:scale(1.3); }
-
-  /* Game Iframe Overlay */
-  #gameContainer { position: fixed; top:0; left:0; width:100%; height:100%; background:black; display:none; flex-direction:column; z-index:999; animation:fadeIn 0.5s; }
-  #gameContainer iframe { flex-grow:1; width:100%; border:none; }
-  #gameContainer .controls { background:#111; padding:10px; display:flex; justify-content:center; gap:10px; }
-  #gameContainer button { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; background:#444; color:white; transition:0.3s; }
-  #gameContainer button:hover { background:#0ff; color:#000; }
-
-  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header>
   <h1>Ultimate Game Hub</h1>
-  <input type="text" id="searchBar" class="search-bar" placeholder="Search games...">
+  <input type="text" id="searchBar" placeholder="Search games...">
   <div class="profile-btn" id="profileBtn">
-    <img src="https://via.placeholder.com/40" alt="Profile">
+    <img src="images/default-profile.png" alt="Profile">
     <div class="profile-menu" id="profileMenu">
       <div>Total time spent: <span id="timeSpent">0</span>s</div>
-      <button id="signOutBtn">Sign out</button>
+      <button id="signOutBtn">Sign Out</button>
     </div>
   </div>
 </header>
 
 <div class="sidebar">
-  <h3>Tag Search</h3>
-  <input type="text" id="tagSearch" placeholder="Filter tags...">
-  <button class="tag-btn" data-tag="all">All Games</button>
-  <button class="tag-btn" data-tag="shooter">Shooter</button>
-  <button class="tag-btn" data-tag="2player">2 Player</button>
-  <button class="tag-btn" data-tag="simulator">Simulator</button>
-  <button class="tag-btn" data-tag="website">Website</button>
+  <h3>Tags</h3>
+  <input type="text" id="tagSearch" placeholder="Filter tags..." disabled>
+  <div id="tagButtons"></div>
 </div>
 
 <main id="gameGrid"></main>
 
+<!-- Game Viewer -->
 <div id="gameContainer">
   <div class="controls">
     <button id="backBtn">Back</button>
     <button id="fullscreenBtn">Fullscreen</button>
   </div>
-  <iframe id="gameFrame" allowfullscreen></iframe>
+  <div class="game-content">
+    <iframe id="gameFrame" allowfullscreen></iframe>
+    <div class="right-sidebar">
+      <h4>Random Games</h4>
+      <div id="randomGames"></div>
+      <img id="sideAd" src="images/ad1.png" alt="Ad">
+    </div>
+    <div class="description-section">
+      <div class="share-section">
+        <button id="shareBtn">Share</button>
+      </div>
+      <p id="gameDescription"></p>
+      <p id="gameCreator"></p>
+      <p id="gameLastUpdated"></p>
+      <p id="gameTags"></p>
+      <img id="bottomAdLeft" src="images/ad2.png" alt="Ad">
+      <img id="bottomAdRight" src="images/ad1.png" alt="Ad">
+    </div>
+  </div>
 </div>
 
-<script>
-// ======== Game Data ========
-const games = [
-  {name:"Geometry Dash", url:"games/geometry dash.html", image:"images/geometrydash-icon.png", tags:["website"], description:"Block jumping"},
-  {name:"CloudMoonApp", url:"https://web.cloudmoonapp.com/", image:"images/cloudmoonapp-icon.png", tags:["website"], description:"Cloud gaming service"},
-  {name:"Shooter Mania", url:"games/shooter.html", image:"images/shooter-icon.png", tags:["shooter"], description:"Fast-paced shooting game"},
-  {name:"2 Player Fun", url:"games/2player.html", image:"images/2player-icon.png", tags:["2player"], description:"Play with a friend online"},
-  {name:"Sim Adventure", url:"games/simulator.html", image:"images/sim-adventure-icon.png", tags:["simulator"], description:"Simulation fun!"}
-];
+<!-- Share Modal -->
+<div id="shareModal">
+  <input type="text" id="shareLink" readonly>
+  <button id="copyBtn">Copy</button>
+  <button id="closeShare">X</button>
+</div>
 
-// ======== State ========
-let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-let timeSpent = 0;
-let currentGame = null;
-
-// ======== DOM Elements ========
-const gameGrid = document.getElementById('gameGrid');
-const searchBar = document.getElementById('searchBar');
-const tagSearch = document.getElementById('tagSearch');
-const gameContainer = document.getElementById('gameContainer');
-const gameFrame = document.getElementById('gameFrame');
-const backBtn = document.getElementById('backBtn');
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-const profileBtn = document.getElementById('profileBtn');
-const profileMenu = document.getElementById('profileMenu');
-
-// ======== Functions ========
-function renderGames(){
-  gameGrid.innerHTML='';
-  const nameFilter=searchBar.value.toLowerCase();
-  const tagFilter=tagSearch.value.toLowerCase();
-  games.forEach(game=>{
-    const matchesName = game.name.toLowerCase().includes(nameFilter);
-    const matchesTag = tagFilter==='' || game.tags.some(t=>t.toLowerCase().includes(tagFilter));
-    if(matchesName && matchesTag){
-      const card = document.createElement('div');
-      card.className='game-card';
-
-      const favStar=document.createElement('div');
-      favStar.className='favorite';
-      favStar.innerHTML='★';
-      if(favorites.includes(game.name)) favStar.style.display='block';
-      favStar.addEventListener('click', e=>{
-        e.stopPropagation();
-        if(favorites.includes(game.name)){
-          favorites=favorites.filter(f=>f!==game.name);
-          favStar.style.display='none';
-        } else {
-          favorites.push(game.name);
-          favStar.style.display='block';
-        }
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-      });
-      card.appendChild(favStar);
-
-      const img=document.createElement('img');
-      img.src=game.image;
-      card.appendChild(img);
-
-      const content=document.createElement('div');
-      content.className='content';
-
-      const title=document.createElement('h4');
-      title.textContent=game.name;
-      content.appendChild(title);
-
-      const tagsDiv=document.createElement('div');
-      tagsDiv.className='tags';
-      game.tags.forEach(t=>{
-        const tagSpan=document.createElement('div');
-        tagSpan.className='tag';
-        tagSpan.textContent=t;
-        tagsDiv.appendChild(tagSpan);
-      });
-      content.appendChild(tagsDiv);
-
-      const buttons=document.createElement('div');
-      buttons.className='card-buttons';
-
-      const playBtn=document.createElement('button');
-      playBtn.className='play-btn';
-      playBtn.textContent='Play';
-      playBtn.addEventListener('click', ()=>{
-        currentGame=game;
-        gameFrame.src=game.url;
-        gameContainer.style.display='flex';
-        document.body.style.overflow='hidden';
-      });
-      buttons.appendChild(playBtn);
-
-      const menuBtn=document.createElement('button');
-      menuBtn.className='menu-btn';
-      menuBtn.textContent='⋮';
-      buttons.appendChild(menuBtn);
-
-      const ellipsisMenu=document.createElement('div');
-      ellipsisMenu.className='ellipsis-menu';
-      const descBtn=document.createElement('button');
-      descBtn.textContent='Description';
-      descBtn.addEventListener('click', e=>{e.stopPropagation(); alert(game.description);});
-      const favBtn=document.createElement('button');
-      favBtn.textContent='Favorite';
-      favBtn.addEventListener('click', e=>{e.stopPropagation(); if(!favorites.includes(game.name)){favorites.push(game.name);} else {favorites=favorites.filter(f=>f!==game.name);} localStorage.setItem('favorites', JSON.stringify(favorites)); renderGames();});
-      ellipsisMenu.appendChild(descBtn);
-      ellipsisMenu.appendChild(favBtn);
-      menuBtn.appendChild(ellipsisMenu);
-
-      menuBtn.addEventListener('mouseenter', ()=>{ ellipsisMenu.style.display='flex'; });
-      menuBtn.addEventListener('mouseleave', ()=>{ ellipsisMenu.style.display='none'; });
-
-      content.appendChild(buttons);
-      card.appendChild(content);
-      gameGrid.appendChild(card);
-    }
-  });
-}
-
-// ======== Event Listeners ========
-searchBar.addEventListener('input', renderGames);
-tagSearch.addEventListener('input', renderGames);
-document.querySelectorAll('.tag-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    tagSearch.value = btn.dataset.tag==='all'?'':btn.dataset.tag;
-    renderGames();
-  });
-});
-
-backBtn.addEventListener('click', ()=>{
-  gameContainer.style.display='none';
-  gameFrame.src='';
-  document.body.style.overflow='auto';
-});
-
-fullscreenBtn.addEventListener('click', ()=>{
-  if(gameFrame.requestFullscreen) gameFrame.requestFullscreen();
-});
-
-profileBtn.addEventListener('click', ()=>{
-  profileMenu.style.display=profileMenu.style.display==='flex'?'none':'flex';
-});
-
-// Time spent counter
-setInterval(()=>{timeSpent++; document.getElementById('timeSpent').textContent=timeSpent;},1000);
-
-// Initial render
-renderGames();
-
-</script>
+<script src="js/main.js"></script>
 </body>
 </html>
