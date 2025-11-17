@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>My Game Hub</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -32,23 +32,23 @@ header h1{margin:0;font-size:20px;}
 .playBtn{width:100%;padding:10px;border:none;border-radius:6px;background:#4caf50;color:white;cursor:pointer;margin-top:6px;}
 .playBtn:active{transform:translateY(1px);}
 .menuBtn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;border:none;background:#444;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;}
-.menuPopup{position:absolute;top:44px;right:10px;display:none;background:#222;padding:8px;border-radius:8px;width:140px;box-shadow:0 4px 12px rgba(0,0,0,.6);z-index:50;}
+.menuPopup{position:absolute;top:44px;right:10px;display:none;background:#222;padding:8px;border-radius:8px;width:160px;box-shadow:0 4px 12px rgba(0,0,0,.6);z-index:50;}
 .menuPopup button{width:100%;padding:8px;margin:6px 0;border-radius:6px;border:none;background:#444;color:#fff;cursor:pointer;text-align:left;}
 .menuPopup button:hover{background:#666;}
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;}
-#loginPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#222;padding:28px;border-radius:12px;width:420px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,.6);}
+#loginPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#222;padding:24px;border-radius:12px;width:420px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,.6);}
 #loginPopup h2{margin:0 0 8px 0;font-size:18px;text-align:center;}
 #loginPopup p{margin:0 0 14px 0;color:#ccc;text-align:center;}
 #googleLoginBtn{display:flex;justify-content:center;}
-#loginCloseBtn{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:#444;color:white;border:none;cursor:pointer;}
+#loginCloseBtn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:#444;color:white;border:none;cursor:pointer;}
 #descPopup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:#222;color:#fff;padding:22px;border-radius:10px;width:420px;max-width:94%;box-shadow:0 10px 30px rgba(0,0,0,.6);}
 #descPopup h3{margin:0 0 8px 0;}
 #descPopup p{margin:0 0 12px 0;color:#ddd;white-space:pre-wrap;}
 .favoriteStar{position:absolute;top:10px;left:10px;font-size:22px;display:none;color:gold;cursor:pointer;pointer-events:auto;text-shadow:0 0 6px rgba(0,0,0,.7);transition:transform .2s;}
 .favoriteStar:hover{transform:scale(1.2);}
-#gameContainer{display:none;position:fixed;inset:0;z-index:1002;background:black;align-items:center;justify-content:center;display:flex;}
+#gameContainer{display:none;position:fixed;inset:0;z-index:1002;background:#000;align-items:center;justify-content:center;display:flex;}
 #gameContainerInner{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
-#gameFrame{border:none;max-width:100%;max-height:100%;width:auto;height:auto;}
+#gameFrame{border:none;max-width:100%;max-height:100%;width:auto;height:auto;background:#000;}
 @media(max-width:800px){#tagPanel{display:none;}#searchBar{width:88%;}.game{width:45%;}}
 </style>
 </head>
@@ -71,31 +71,34 @@ header h1{margin:0;font-size:20px;}
 
     <div id="gameAreaWrap">
       <div id="gameList">
-        <!-- Example Game -->
-        <div class="game" data-id="cloudmoonapp" data-url="https://web.cloudmoonapp.com/" data-tags="website" data-desc="CloudMoonApp — web-based game platform.">
+        <!-- Game 1 -->
+        <div class="game" data-id="geometrydash" data-url="https://geometry-game.io/" data-tags="website" data-desc="Block jumping">
           <div class="favoriteStar">⭐</div>
           <button class="menuBtn">⋮</button>
           <div class="menuPopup">
             <button class="descBtn">Description</button>
             <button class="favBtn">Add to Favorites</button>
           </div>
-          <img class="gameIcon" src="images/cloudmoonapp-icon.png">
-          <div class="gameTitle">CloudMoonApp</div>
-          <div class="tagBadges"></div>
-          <button class="playBtn">Play</button>
-        </div>
-        <div class="game" data-id="geometrydash" data-url="geometry dash" data-tags="shooter, website" data-desc="Geometry Dash — fast-paced action/platformer.">
-          <div class="favoriteStar">⭐</div>
-          <button class="menuBtn">⋮</button>
-          <div class="menuPopup">
-            <button class="descBtn">Description</button>
-            <button class="favBtn">Add to Favorites</button>
-          </div>
-          <img class="gameIcon" src="images/geometrydash-icon.png">
+          <img class="gameIcon" src="images/geometrydash-icon.png" alt="Geometry Dash">
           <div class="gameTitle">Geometry Dash</div>
           <div class="tagBadges"></div>
           <button class="playBtn">Play</button>
         </div>
+
+        <!-- Game 2 -->
+        <div class="game" data-id="cloudmoonapp" data-url="https://web.cloudmoonapp.com/" data-tags="website" data-desc="Cloud gaming service.">
+          <div class="favoriteStar">⭐</div>
+          <button class="menuBtn">⋮</button>
+          <div class="menuPopup">
+            <button class="descBtn">Description</button>
+            <button class="favBtn">Add to Favorites</button>
+          </div>
+          <img class="gameIcon" src="images/cloudmoonapp-icon.png" alt="CloudMoonApp">
+          <div class="gameTitle">CloudMoonApp</div>
+          <div class="tagBadges"></div>
+          <button class="playBtn">Play</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -132,213 +135,280 @@ header h1{margin:0;font-size:20px;}
 </div>
 
 <script>
-// ---------- Google Login ----------
-let userLoggedIn=false;
-let currentGame=null;
+// ---------- Configuration ----------
+const GOOGLE_CLIENT_ID = "202765528482-vcrnpmmalmt47qcvhrdr7uqtpc8sc5cs.apps.googleusercontent.com";
+const ASPECT_RATIO = 16/9; // change to match your games if different
 
-window.onload=function(){
-  document.getElementById('gameContainer').style.display='none';
-  document.getElementById('overlay').style.display='none';
-  document.getElementById('loginPopup').style.display='none';
-  document.getElementById('descPopup').style.display='none';
+// ---------- State ----------
+let userLoggedIn = false;
+let currentGame = null;
 
-  userLoggedIn=localStorage.getItem("googleUser")?true:false;
+// ---------- Helpers: favorites ----------
+const FAVS_KEY = 'hub_favorites_v1';
+function loadFavs(){ try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || {}; } catch(e){ return {}; } }
+function saveFavs(obj){ localStorage.setItem(FAVS_KEY, JSON.stringify(obj)); }
+function refreshFavs(){
+  const favs = loadFavs();
+  document.querySelectorAll('.game').forEach(g=>{
+    const id = g.dataset.id;
+    const star = g.querySelector('.favoriteStar');
+    const popupFav = g.querySelector('.favBtn');
+    if(favs[id]){ star.style.display='block'; if(popupFav) popupFav.innerText='Remove Favorite'; }
+    else { star.style.display='none'; if(popupFav) popupFav.innerText='Add to Favorites'; }
+  });
+}
+
+// ---------- Google Sign-In init & handlers ----------
+function initGoogle(){
+  userLoggedIn = !!localStorage.getItem('googleUser');
 
   google.accounts.id.initialize({
-    client_id:"202765528482-vcrnpmmalmt47qcvhrdr7uqtpc8sc5cs.apps.googleusercontent.com",
+    client_id: GOOGLE_CLIENT_ID,
     callback: handleCredentialResponse
   });
   google.accounts.id.renderButton(
     document.getElementById("googleLoginBtn"),
-    {theme:"outline", size:"large", width:280}
+    { theme: "outline", size: "large", width: 280 }
   );
-
-  initGames();
-};
+}
 
 function handleCredentialResponse(response){
-  localStorage.setItem("googleUser",response.credential);
-  userLoggedIn=true;
-  document.getElementById("loginPopup").style.display='none';
-  document.getElementById("overlay").style.display='none';
-  if(currentGame) openGame(currentGame);
+  if(response && response.credential){
+    localStorage.setItem('googleUser', response.credential);
+    userLoggedIn = true;
+    // hide login UI
+    document.getElementById('loginPopup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    // open the game that triggered login (if any)
+    if(currentGame) { openGame(currentGame); currentGame = null; }
+  }
 }
 
-// ---------- Favorites ----------
-const favsKey='hub_favorites_v1';
-function loadFavs(){try{return JSON.parse(localStorage.getItem(favsKey))||{}}catch(e){return {}}}
-function saveFavs(obj){localStorage.setItem(favsKey,JSON.stringify(obj))}
-function refreshFavs(){
-  const favs=loadFavs();
-  document.querySelectorAll('.game').forEach(g=>{
-    const id=g.dataset.id;
-    const star=g.querySelector('.favoriteStar');
-    const popupFav=g.querySelector('.favBtn');
-    if(favs[id]){star.style.display='block'; popupFav.innerText='Remove Favorite';}else{star.style.display='none'; popupFav.innerText='Add to Favorites';}
-  });
-}
+// ---------- UI: initial state ----------
+window.addEventListener('load', ()=>{
+  // Make sure popups & game container are hidden initially
+  document.getElementById('gameContainer').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('loginPopup').style.display = 'none';
+  document.getElementById('descPopup').style.display = 'none';
 
-// ---------- Tag Search ----------
-const tagInput=document.getElementById('tagSearch');
-const allGamesBtn=document.getElementById('allGamesBtn');
-
-let allTags=new Set();
-document.querySelectorAll('.game').forEach(g=>{
-  g.dataset.tags.split(',').map(t=>t.trim().toLowerCase()).forEach(tag=>allTags.add(tag));
-});
-allTags=Array.from(allTags);
-
-const tagDropdown=document.createElement('div');
-tagDropdown.style.position='absolute';
-tagDropdown.style.background='#222';
-tagDropdown.style.border='1px solid #444';
-tagDropdown.style.borderRadius='6px';
-tagDropdown.style.top=(tagInput.offsetTop+tagInput.offsetHeight)+'px';
-tagDropdown.style.left=tagInput.offsetLeft+'px';
-tagDropdown.style.width=tagInput.offsetWidth+'px';
-tagDropdown.style.maxHeight='120px';
-tagDropdown.style.overflowY='auto';
-tagDropdown.style.display='none';
-document.getElementById('tagPanel').appendChild(tagDropdown);
-
-tagInput.addEventListener('input',()=>{
-  const val=tagInput.value.toLowerCase();
-  tagDropdown.innerHTML='';
-  if(val===''){ tagDropdown.style.display='none'; showAllGames(); return;}
-  const filtered=allTags.filter(t=>t.includes(val));
-  if(filtered.length===0){ tagDropdown.style.display='none'; return;}
-  filtered.forEach(t=>{
-    const div=document.createElement('div');
-    div.style.padding='4px 8px';
-    div.style.cursor='pointer';
-    div.style.color='#ddd';
-    div.innerText=t;
-    div.addEventListener('click',()=>{ applyTagFilter(t); tagDropdown.style.display='none'; tagInput.value=t; });
-    tagDropdown.appendChild(div);
-  });
-  tagDropdown.style.display='block';
-});
-
-function applyTagFilter(tag){
-  document.querySelectorAll('.game').forEach(g=>{
-    const gameTags=g.dataset.tags.toLowerCase().split(',').map(t=>t.trim());
-    g.style.display=gameTags.includes(tag.toLowerCase())?'inline-block':'none';
-  });
-}
-
-function showAllGames(){
-  document.querySelectorAll('.game').forEach(g=>g.style.display='inline-block');
-}
-
-allGamesBtn.addEventListener('click',()=>{
-  tagInput.value='';
-  showAllGames();
-  tagDropdown.style.display='none';
-});
-
-// ---------- Search by title ----------
-const searchBar=document.getElementById('searchBar');
-searchBar.addEventListener('input',e=>{
-  const query=e.target.value.toLowerCase();
-  document.querySelectorAll('.game').forEach(g=>{
-    const title=g.querySelector('.gameTitle').innerText.toLowerCase();
-    g.style.display = title.includes(query) ? 'inline-block' : 'none';
-  });
-});
-
-// ---------- Game & Menu ----------
-function initGames(){
+  initGoogle();
+  initTagSearch();
+  initSearchByTitle();
+  initGameCards();
   refreshFavs();
+});
+
+// ---------- Tag search (autocomplete + filter) ----------
+function initTagSearch(){
+  const tagInput = document.getElementById('tagSearch');
+  const allGamesBtn = document.getElementById('allGamesBtn');
+
+  // collect tags from code
+  let tagSet = new Set();
   document.querySelectorAll('.game').forEach(g=>{
-    const menuBtn=g.querySelector('.menuBtn');
-    const popup=g.querySelector('.menuPopup');
-    const descBtn=popup.querySelector('.descBtn');
-    const favBtn=popup.querySelector('.favBtn');
-    const star=g.querySelector('.favoriteStar');
-    const playBtn=g.querySelector('.playBtn');
+    if(!g.dataset.tags) return;
+    g.dataset.tags.split(',').map(t=>t.trim().toLowerCase()).forEach(t=>{ if(t) tagSet.add(t); });
+  });
+  const allTags = Array.from(tagSet);
 
-    menuBtn.addEventListener('click',e=>{
-      e.stopPropagation();
-      document.querySelectorAll('.menuPopup').forEach(p=>{if(p!==popup)p.style.display='none'});
-      popup.style.display=popup.style.display==='block'?'none':'block';
-    });
+  // dropdown
+  const tagDropdown = document.createElement('div');
+  tagDropdown.style.position = 'absolute';
+  tagDropdown.style.background = '#222';
+  tagDropdown.style.border = '1px solid #444';
+  tagDropdown.style.borderRadius = '6px';
+  tagDropdown.style.zIndex = '950';
+  tagDropdown.style.maxHeight = '160px';
+  tagDropdown.style.overflowY = 'auto';
+  tagDropdown.style.display = 'none';
+  document.getElementById('tagPanel').appendChild(tagDropdown);
 
-    descBtn.addEventListener('click',()=>{
-      document.getElementById('descTitle').innerText=g.querySelector('.gameTitle').innerText;
-      document.getElementById('descText').innerText=g.dataset.desc||'No description';
-      document.getElementById('descPopup').style.display='block';
-    });
+  function positionDropdown(){
+    const rect = tagInput.getBoundingClientRect();
+    const panelRect = document.getElementById('tagPanel').getBoundingClientRect();
+    tagDropdown.style.left = (rect.left - panelRect.left) + 'px';
+    tagDropdown.style.top = (rect.bottom - panelRect.top + 4) + 'px';
+    tagDropdown.style.width = rect.width + 'px';
+  }
+  window.addEventListener('resize', positionDropdown);
+  tagInput.addEventListener('focus', positionDropdown);
 
-    favBtn.addEventListener('click',()=>{
-      const favs=loadFavs();
-      if(favs[g.dataset.id]){delete favs[g.dataset.id]}else{favs[g.dataset.id]=true;}
-      saveFavs(favs); refreshFavs(); popup.style.display='none';
+  tagInput.addEventListener('input', ()=>{
+    const val = tagInput.value.trim().toLowerCase();
+    tagDropdown.innerHTML = '';
+    if(!val){ tagDropdown.style.display = 'none'; showAllGames(); return; }
+    const matches = allTags.filter(t => t.includes(val));
+    if(matches.length === 0){ tagDropdown.style.display = 'none'; return; }
+    matches.forEach(t=>{
+      const div = document.createElement('div');
+      div.style.padding = '6px 8px';
+      div.style.cursor = 'pointer';
+      div.style.color = '#ddd';
+      div.innerText = t;
+      div.addEventListener('click', ()=>{ applyTagFilter(t); tagInput.value = t; tagDropdown.style.display = 'none'; });
+      tagDropdown.appendChild(div);
     });
-
-    star.addEventListener('click',()=>{
-      const favs=loadFavs();
-      if(favs[g.dataset.id]){delete favs[g.dataset.id]}else{favs[g.dataset.id]=true;}
-      saveFavs(favs); refreshFavs();
-    });
-
-    playBtn.addEventListener('click',()=>{
-      if(!userLoggedIn){
-        currentGame=g;
-        document.getElementById('overlay').style.display='block';
-        document.getElementById('loginPopup').style.display='block';
-      } else openGame(g);
-    });
+    positionDropdown();
+    tagDropdown.style.display = 'block';
   });
 
-  document.body.addEventListener('click',()=>document.querySelectorAll('.menuPopup').forEach(p=>p.style.display='none'));
-  document.getElementById('descCloseBtn').addEventListener('click',()=>document.getElementById('descPopup').style.display='none');
-  document.getElementById('loginCloseBtn').addEventListener('click',()=>{
-    document.getElementById('loginPopup').style.display='none';
-    document.getElementById('overlay').style.display='none';
+  function applyTagFilter(tag){
+    document.querySelectorAll('.game').forEach(g=>{
+      const tags = (g.dataset.tags || '').toLowerCase().split(',').map(x=>x.trim()).filter(Boolean);
+      g.style.display = tags.includes(tag.toLowerCase()) ? 'inline-block' : 'none';
+    });
+  }
+  function showAllGames(){
+    document.querySelectorAll('.game').forEach(g=> g.style.display = 'inline-block' );
+  }
+  allGamesBtn.addEventListener('click', ()=>{
+    tagInput.value = '';
+    showAllGames();
+    tagDropdown.style.display = 'none';
+  });
+
+  // show favorites button
+  document.getElementById('showFavoritesBtn').addEventListener('click', ()=>{
+    const favs = loadFavs();
+    document.querySelectorAll('.game').forEach(g=>{
+      g.style.display = favs[g.dataset.id] ? 'inline-block' : 'none';
+    });
   });
 }
 
-// ---------- Open Game ----------
+// ---------- Title search ----------
+function initSearchByTitle(){
+  const searchBar = document.getElementById('searchBar');
+  searchBar.addEventListener('input', e=>{
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('.game').forEach(g=>{
+      const title = (g.querySelector('.gameTitle')?.innerText || '').toLowerCase();
+      g.style.display = title.includes(q) ? 'inline-block' : 'none';
+    });
+  });
+}
+
+// ---------- Game card behaviors ----------
+function initGameCards(){
+  document.querySelectorAll('.game').forEach(g=>{
+    // render tag badges
+    const badgeWrap = g.querySelector('.tagBadges');
+    badgeWrap.innerHTML = '';
+    if(g.dataset.tags){
+      g.dataset.tags.split(',').map(t=>t.trim()).filter(Boolean).forEach(tag=>{
+        const s = document.createElement('span');
+        s.className = 'tagBadge';
+        s.innerText = tag;
+        badgeWrap.appendChild(s);
+      });
+    }
+
+    const menuBtn = g.querySelector('.menuBtn');
+    const popup = g.querySelector('.menuPopup');
+    const descBtn = popup.querySelector('.descBtn');
+    const favBtn = popup.querySelector('.favBtn');
+    const star = g.querySelector('.favoriteStar');
+    const playBtn = g.querySelector('.playBtn');
+
+    menuBtn.addEventListener('click', e=>{
+      e.stopPropagation();
+      document.querySelectorAll('.menuPopup').forEach(p=>{ if(p !== popup) p.style.display = 'none'; });
+      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    });
+
+    descBtn.addEventListener('click', ()=>{
+      document.getElementById('descTitle').innerText = g.querySelector('.gameTitle').innerText;
+      document.getElementById('descText').innerText = g.dataset.desc || 'No description';
+      document.getElementById('descPopup').style.display = 'block';
+    });
+
+    favBtn.addEventListener('click', ()=>{
+      const favs = loadFavs();
+      if(favs[g.dataset.id]) delete favs[g.dataset.id];
+      else favs[g.dataset.id] = true;
+      saveFavs(favs);
+      refreshFavs();
+      popup.style.display = 'none';
+    });
+
+    star.addEventListener('click', e=>{
+      e.stopPropagation();
+      const favs = loadFavs();
+      if(favs[g.dataset.id]) delete favs[g.dataset.id];
+      else favs[g.dataset.id] = true;
+      saveFavs(favs);
+      refreshFavs();
+    });
+
+    // Play button — if not logged in, show login popup; otherwise open game
+    playBtn.addEventListener('click', ()=>{
+      if(!userLoggedIn){
+        currentGame = g;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('loginPopup').style.display = 'block';
+      } else {
+        openGame(g);
+      }
+    });
+  });
+
+  // close menus on outside click
+  document.body.addEventListener('click', ()=> document.querySelectorAll('.menuPopup').forEach(p=> p.style.display='none') );
+
+  // description close
+  document.getElementById('descCloseBtn').addEventListener('click', ()=> {
+    document.getElementById('descPopup').style.display = 'none';
+  });
+
+  // login popup close (X)
+  document.getElementById('loginCloseBtn').addEventListener('click', ()=> {
+    document.getElementById('loginPopup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    currentGame = null;
+  });
+}
+
+// ---------- Open game iframe (fits by aspect ratio) ----------
 function openGame(game){
-  const iframe=document.getElementById('gameFrame');
-  document.getElementById('currentGameLabel').innerText=game.querySelector('.gameTitle').innerText;
-  document.getElementById('gameContainer').style.display='flex';
-  document.body.style.overflow='hidden';
-  iframe.src=game.dataset.url;
+  const iframe = document.getElementById('gameFrame');
+  document.getElementById('currentGameLabel').innerText = game.querySelector('.gameTitle').innerText;
+  document.getElementById('gameContainer').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  iframe.src = game.dataset.url;
   resizeGameFrame();
 }
 
 // ---------- Back & Fullscreen ----------
-document.getElementById('backBtn').addEventListener('click',()=>{
-  document.getElementById('gameContainer').style.display='none';
-  document.getElementById('gameFrame').src='';
-  document.body.style.overflow='auto';
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  document.getElementById('gameContainer').style.display = 'none';
+  document.getElementById('gameFrame').src = '';
+  document.body.style.overflow = 'auto';
 });
-document.getElementById('fullscreenBtn').addEventListener('click',()=>{
-  const iframe=document.getElementById('gameFrame');
+
+document.getElementById('fullscreenBtn').addEventListener('click', ()=>{
+  const iframe = document.getElementById('gameFrame');
   if(iframe.requestFullscreen) iframe.requestFullscreen();
 });
 
-// ---------- Resize iframe ----------
+// ---------- Resize iframe keeping aspect ratio ----------
 function resizeGameFrame(){
-  const iframe=document.getElementById('gameFrame');
-  const container=document.getElementById('gameContainerInner');
-  const containerWidth=container.clientWidth;
-  const containerHeight=container.clientHeight;
-  const aspectRatio=16/9; // adjust if your games have a different aspect
-
-  let width=containerWidth;
-  let height=width/aspectRatio;
-
-  if(height>containerHeight){
-    height=containerHeight;
-    width=height*aspectRatio;
+  const iframe = document.getElementById('gameFrame');
+  const container = document.getElementById('gameContainerInner');
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+  let width = containerWidth;
+  let height = width / ASPECT_RATIO;
+  if(height > containerHeight){
+    height = containerHeight;
+    width = height * ASPECT_RATIO;
   }
-
-  iframe.style.width=width+'px';
-  iframe.style.height=height+'px';
+  iframe.style.width = Math.floor(width) + 'px';
+  iframe.style.height = Math.floor(height) + 'px';
 }
+window.addEventListener('resize', resizeGameFrame);
 
-window.addEventListener('resize',resizeGameFrame);
+// ---------- End ----------
 </script>
-</body
+</body>
+</html>
