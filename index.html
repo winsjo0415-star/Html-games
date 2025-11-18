@@ -49,13 +49,12 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helv
 .side-menu:hover ~ .main{margin-left:var(--side-expanded);}
 .muted{color:var(--muted);font-size:13px;}
 
-/* Tag search as emoji like Shooter */
+/* Tag search as emoji only */
 .tag-search-item{height:36px;display:flex;align-items:center;padding:0 10px;margin-bottom:8px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:text;}
-.side-menu:not(:hover) .tag-search-item span.full-name {display:none;}
 .side-menu:not(:hover) .tag-search-item span.emoji {display:inline;}
-.side-menu:hover .tag-search-item span.full-name {display:inline;}
+.side-menu:not(:hover) .tag-search-item input {display:none;}
 .side-menu:hover .tag-search-item span.emoji {margin-right:6px;}
-.tag-search-item input{flex:1;border:none;background:transparent;color:inherit;outline:none;margin-left:4px;}
+.side-menu:hover .tag-search-item input {display:inline;flex:1;border:none;background:transparent;color:inherit;outline:none;margin-left:4px;}
 
 @media (max-width:720px){.top-search input{width:90%;}.side-menu:hover{width:200px;}.side-menu{width:54px;}.main{margin-left:54px;}}
 </style>
@@ -80,7 +79,10 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helv
 <nav class="side-menu" id="sideMenu">
   <div class="side-inner">
     <div class="tags-search">
-      <div class="tag-search-item"><span class="emoji">🔍</span><span class="full-name">Search Tags</span><input id="tagSearch" placeholder="search for tags"></div>
+      <div class="tag-search-item">
+        <span class="emoji">🔍</span>
+        <input id="tagSearch" placeholder="search for tags">
+      </div>
     </div>
     <div class="tags-list">
       <ul id="tagsUl"></ul>
