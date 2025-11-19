@@ -152,7 +152,7 @@ body {
     background:var(--bg-main);
 }
 
-/* GAME FRAME */
+/* GAME CONTAINER */
 #gameContainer{
     position:relative;
     width:80%;
@@ -187,6 +187,18 @@ body {
     font-weight:bold;
     border-radius:8px;
     cursor:pointer;
+}
+
+/* FULLSCREEN STYLES */
+#gameContainer:fullscreen,
+#gameContainer:-webkit-full-screen{
+    width:100vw;
+    height:100vh;
+    border-radius:0;
+}
+#gameContainer:fullscreen #gameFrame,
+#gameContainer:-webkit-full-screen #gameFrame{
+    border-radius:0;
 }
 
 /* RESPONSIVE */
@@ -233,7 +245,7 @@ body {
 <script>
 /* GAME LIST */
 const games=[
-    {file:'games/pong.html',title:'Pong',image:'images/doggy.png'},
+    {file:'games/shooter.html',title:'Shooter',image:'games/shooter.png'},
     {file:'games/rymd.html',title:'Rymd Attack',image:'games/rymd.png'}
 ];
 
@@ -264,13 +276,13 @@ function closeGame(){
 
 /* FULLSCREEN */
 function fullscreenGame(){
-    const iframe=document.getElementById('gameFrame');
-    if(iframe.requestFullscreen){
-        iframe.requestFullscreen();
-    } else if(iframe.webkitRequestFullscreen){
-        iframe.webkitRequestFullscreen();
-    } else if(iframe.msRequestFullscreen){
-        iframe.msRequestFullscreen();
+    const container = document.getElementById('gameContainer');
+    if(container.requestFullscreen){
+        container.requestFullscreen();
+    } else if(container.webkitRequestFullscreen){
+        container.webkitRequestFullscreen();
+    } else if(container.msRequestFullscreen){
+        container.msRequestFullscreen();
     }
 }
 </script>
