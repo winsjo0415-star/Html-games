@@ -147,21 +147,51 @@ body {
     flex-direction:column;
     width:100%;
     height:calc(100vh - var(--topbar-height));
+    align-items:center;
+    justify-content:center;
+    background:var(--bg-main);
+}
+
+/* GAME FRAME */
+#gameContainer{
+    position:relative;
+    width:80%;
+    max-width:1000px;
+    height:600px;
+    background:#111;
+    display:flex;
+    flex-direction:column;
 }
 #gameFrame{
     flex:1;
     width:100%;
     border:none;
+    border-radius:12px 12px 0 0;
 }
-.back-btn{
-    margin-bottom:10px;
-    padding:10px 20px;
-    font-size:16px;
+
+/* GAME FOOTER BAR */
+#gameFooter{
+    height:50px;
+    background:#222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 15px;
+    border-radius:0 0 12px 12px;
+}
+#gameFooter button{
+    background:var(--accent);
     border:none;
-    border-radius:10px;
-    cursor:pointer;
-    background:#1e1e1e;
+    padding:6px 14px;
     color:white;
+    font-weight:bold;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+    #gameContainer{width:95%;height:400px;}
 }
 </style>
 </head>
@@ -191,15 +221,20 @@ body {
 
 <!-- GAME PAGE -->
 <div id="gamePage">
-    <button class="back-btn" onclick="closeGame()">Back</button>
-    <iframe id="gameFrame"></iframe>
+    <div id="gameContainer">
+        <iframe id="gameFrame"></iframe>
+        <div id="gameFooter">
+            <button onclick="closeGame()">Back</button>
+            <button onclick="fullscreenGame()">Fullscreen</button>
+        </div>
+    </div>
 </div>
 
 <script>
 /* GAME LIST */
 const games=[
-    {file:'games/valtergames/rymdattack.html',title:'Rymd Attack',image:'images/rymdattack.png'},
-    {file:'games/rymd.html',title:'Rymd',image:'ymd.png'}
+    {file:'games/shooter.html',title:'Shooter',image:'games/shooter.png'},
+    {file:'games/rymd.html',title:'Rymd Attack',image:'games/rymd.png'}
 ];
 
 /* BUILD GAME CARDS */
@@ -226,6 +261,19 @@ function closeGame(){
     document.getElementById('main-content').style.display='block';
     document.getElementById('gameFrame').src='';
 }
+
+/* FULLSCREEN */
+function fullscreenGame(){
+    const iframe=document.getElementById('gameFrame');
+    if(iframe.requestFullscreen){
+        iframe.requestFullscreen();
+    } else if(iframe.webkitRequestFullscreen){
+        iframe.webkitRequestFullscreen();
+    } else if(iframe.msRequestFullscreen){
+        iframe.msRequestFullscreen();
+    }
+}
 </script>
+
 </body>
 </html>
