@@ -1,337 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hype Html — Games</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<title>Your Game Hub</title>
 <style>
-:root{
-  --side-collapsed:60px;
-  --side-expanded:260px;
-  --topbar-height:64px;
-  --bg-main:#0a0a0a;
-  --bg-side:#141414;
-  --accent:#BF80FF;
-}
-html,body{
-  margin:0;
-  font-family:'Quicksand',sans-serif;
-  background:var(--bg-main);
-  color:white;
-  height:100%;
-  overflow-x:hidden;
-}
-/* TOPBAR */
-.topbar{
-  position:fixed;
-  top:0;
-  left:var(--side-collapsed);
-  right:0;
-  height:var(--topbar-height);
-  background:var(--bg-side);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 15px;
-  transition:left 0.25s ease;
-  z-index:10;
-}
-#sidebar:hover ~ .topbar{
-  left:var(--side-expanded);
-}
-.top-search input{
-  width:60%;
-  max-width:700px;
-  padding:8px 12px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:transparent;
-  color:white;
-  outline:none;
-}
-/* SIDEBAR */
-#sidebar{
-  position:fixed;
-  top:0;
-  left:0;
-  bottom:0;
-  width:var(--side-collapsed);
-  background:var(--bg-side);
-  overflow:hidden;
-  transition:width 0.25s ease;
-  z-index:10;
-}
-#sidebar:hover{width:var(--side-expanded);}
-.sidebar-item{
-  display:flex;
-  align-items:center;
-  padding:10px 12px;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.sidebar-item .emoji{width:30px;text-align:center;font-size:20px;}
-.sidebar-item .label{margin-left:6px;opacity:0;transition:opacity 0.25s;}
-#sidebar:hover .label{opacity:1;}
-.tag-search-item{
-  display:flex;
-  align-items:center;
-  background:rgba(255,255,255,0.03);
-  border-radius:8px;
-  padding:5px 8px;
-  margin:10px;
-}
-.tag-search-item input{
-  flex:1;
-  border:none;
-  background:transparent;
-  color:white;
-  outline:none;
-  margin-left:6px;
-  font-size:14px;
-  display:none;
-}
-#sidebar:hover .tag-search-item input{display:inline-flex;}
-/* MAIN HUB */
-.main{
-  margin-top:var(--topbar-height);
-  margin-left:var(--side-collapsed);
-  transition:margin-left 0.25s ease;
-  padding:20px;
-}
-#sidebar:hover ~ .main{margin-left:var(--side-expanded);}
-.games-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:16px;
-}
-.game-tile{
-  width:100%;
-  aspect-ratio:1/1;
-  background:#222;
-  border-radius:8px;
-  overflow:hidden;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  flex-direction:column;
-}
-.game-tile img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.game-tile span.title{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  text-align:center;
-  background:rgba(0,0,0,0.6);
-  padding:4px 0;
-  font-size:14px;
-  border-top:1px solid rgba(255,255,255,0.1);
-}
-/* GAME SCREEN AREA */
-#gamePage{
-  display:none;
-}
-#gameArea{
-  width:70%;
-  height:60vh;
-  margin:20px auto;
-  position:relative;
-  background:#111;
-  border-radius:8px;
-  overflow:hidden;
-}
-#gameFrame{
-  width:100%;
-  height:100%;
-  border:none;
-  display:block;
-  overflow:hidden; /* Prevent iframe scrollbars */
-}
-/* CONTROLS */
-#controls{
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  background:#222;
-  padding:8px 12px;
-  z-index:5;
-}
-#controls button{
-  padding:6px 12px;
-  border:none;
-  border-radius:8px;
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
-}
-/* FULLSCREEN MODE */
-.fullscreen-mode #gameArea{
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  margin:0;
-  border-radius:0;
-}
-.fullscreen-mode #gameFrame{
-  width:100%;
-  height:100%;
-}
-.fullscreen-mode #sidebar,
-.fullscreen-mode .topbar,
-.fullscreen-mode #controls{
-  display:none !important;
-}
-body.game-active{
-  overflow:hidden; /* Prevent scrolling while game active */
-}
-@media(max-width:720px){
-  .top-search input{width:90%;}
-  #sidebar{width:54px;}
-  #sidebar:hover{width:200px;}
-  .main{margin-left:54px;}
-}
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0a0a0a;
+        overflow-x: hidden;
+    }
+
+    /* --- TOP BAR --- */
+    #topBar {
+        width: 100%;
+        height: 55px;
+        background: #BF80FF;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        color: white;
+        font-size: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    /* --- LEFT MENU --- */
+    #leftMenu {
+        position: fixed;
+        top: 55px;
+        left: 0;
+        width: 250px;
+        height: 100%;
+        background: #8080FF;
+        padding: 20px;
+        transform: translateX(-250px);
+        transition: 0.3s ease;
+        z-index: 999;
+    }
+
+    #leftMenu:hover {
+        transform: translateX(0);
+    }
+
+    #tagSearch {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    /* --- MAIN GAME GRID --- */
+    #mainContent {
+        margin-top: 80px;
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .gameTile {
+        width: 220px;
+        height: 220px;
+        background: #80BFFF;
+        border-radius: 14px;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .gameTile img {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+    }
+
+    .gameTitle {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        text-align: center;
+        padding: 6px 0;
+        font-size: 16px;
+    }
+
+    #gameSearch {
+        width: 300px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        margin-left: 20px;
+        font-size: 16px;
+    }
 </style>
+
+<script>
+function filterGames() {
+    let input = document.getElementById("gameSearch").value.toLowerCase();
+    let tiles = document.querySelectorAll(".gameTile");
+
+    tiles.forEach(tile => {
+        let title = tile.getAttribute("data-title").toLowerCase();
+        tile.style.display = title.includes(input) ? "block" : "none";
+    });
+}
+
+function filterTags() {
+    let input = document.getElementById("tagSearch").value.toLowerCase();
+    let tiles = document.querySelectorAll(".gameTile");
+
+    tiles.forEach(tile => {
+        let tags = tile.getAttribute("data-tags").toLowerCase();
+        tile.style.display = tags.includes(input) ? "block" : "none";
+    });
+}
+</script>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div id="sidebar">
-  <div class="tag-search-item">
-    <span class="emoji">🔍</span>
-    <input type="text" id="tagSearch" placeholder="search for tags">
-  </div>
-  <div class="sidebar-item" data-tag="Shooter">
-    <span class="emoji">🔫</span>
-    <span class="label">Shooter</span>
-  </div>
+<div id="topBar">
+    Game Hub
+    <input id="gameSearch" type="text" placeholder="Search games..." onkeyup="filterGames()">
 </div>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <input type="text" id="gameSearch" placeholder="Search for games" class="top-search">
+<div id="leftMenu">
+    <input id="tagSearch" type="text" placeholder="Search tags..." onkeyup="filterTags()">
 </div>
 
-<!-- MAIN HUB -->
-<div class="main" id="mainContent">
-  <h1>Welcome to Hype Html</h1>
-  <p class="muted">Click a game to play. Can be a local HTML game or an external website.</p>
-  <div class="games-grid" id="gamesArea"></div>
-</div>
+<div id="mainContent">
 
-<!-- GAME PAGE -->
-<div class="main" id="gamePage">
-  <div id="gameArea">
-    <iframe id="gameFrame" scrolling="no" frameborder="0"></iframe>
-    <div id="controls">
-      <button id="backBtn">Back</button>
-      <button id="fullscreenBtn">Fullscreen</button>
+    <!-- GAME TILES -->
+    <div class="gameTile"
+        data-title="Pong"
+        data-tags="shooter retro ball paddle"
+        onclick="window.location.href='games/pong.html'">
+        <img src="images/doggy.png">
+        <div class="gameTitle">Pong</div>
     </div>
-  </div>
+
 </div>
-
-<script>
-// Games list
-const games=[
-  {title:'Pong',image:'images/doggy.png',url:'games/pong.html',tags:['Shooter']},
-  {title:'Example Site',image:'example.jpg',url:'https://example.com',tags:[]}
-];
-
-// Render games
-const gamesArea=document.getElementById('gamesArea');
-function renderGames(search='', tagFilter=''){
-  gamesArea.innerHTML='';
-  const q=search.toLowerCase();
-  games.forEach(game=>{
-    const matchesSearch=game.title.toLowerCase().includes(q);
-    const matchesTag=tagFilter==='' || game.tags.includes(tagFilter);
-    if(matchesSearch && matchesTag){
-      const div=document.createElement('div');
-      div.className='game-tile';
-      const img=document.createElement('img');
-      img.src=game.image;
-      img.alt=game.title;
-      div.appendChild(img);
-      const spanTitle=document.createElement('span');
-      spanTitle.className='title';
-      spanTitle.innerText=game.title;
-      div.appendChild(spanTitle);
-      div.addEventListener('click',()=>{
-        document.getElementById('mainContent').style.display='none';
-        document.getElementById('gamePage').style.display='block';
-        const iframe=document.getElementById('gameFrame');
-        iframe.src=game.url;
-        iframe.setAttribute('scrolling','no');
-        iframe.setAttribute('frameborder','0');
-        document.body.classList.add('game-active'); // prevent page scroll
-      });
-      gamesArea.appendChild(div);
-    }
-  });
-}
-renderGames();
-
-// Game search bar
-document.getElementById('gameSearch').addEventListener('input',e=>{
-  renderGames(e.target.value);
-});
-
-// Tag search bar
-const tagItems=document.querySelectorAll('.sidebar-item');
-document.getElementById('tagSearch').addEventListener('input',e=>{
-  const val=e.target.value.toLowerCase();
-  tagItems.forEach(item=>{
-    const tag=item.dataset.tag.toLowerCase();
-    item.style.display=tag.includes(val)?'flex':'none';
-  });
-});
-
-// Clicking a tag filters games
-tagItems.forEach(item=>{
-  item.addEventListener('click',()=>{
-    const tag=item.dataset.tag;
-    renderGames('',tag);
-  });
-});
-
-// Game screen controls
-const backBtn=document.getElementById('backBtn');
-const fullscreenBtn=document.getElementById('fullscreenBtn');
-
-backBtn.onclick=()=>{
-  document.getElementById('gamePage').style.display='none';
-  document.getElementById('mainContent').style.display='block';
-  document.getElementById('gameFrame').src='';
-  document.body.classList.remove('game-active');
-};
-
-fullscreenBtn.onclick=()=>{
-  const gameArea=document.getElementById('gameArea');
-  if(!document.fullscreenElement){
-    gameArea.requestFullscreen();
-    document.body.classList.add('fullscreen-mode');
-  } else {
-    document.exitFullscreen();
-    document.body.classList.remove('fullscreen-mode');
-  }
-};
-
-document.addEventListener('fullscreenchange',()=>{
-  if(!document.fullscreenElement){
-    document.body.classList.remove('fullscreen-mode');
-  }
-});
-</script>
 
 </body>
 </html>
-
