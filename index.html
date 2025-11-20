@@ -115,22 +115,32 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
+  position:relative;
+  flex-direction:column;
 }
 .game-tile img{
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
 }
-.muted{color:#9aa7bf;font-size:13px;}
+.game-tile span.title{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  text-align:center;
+  background:rgba(0,0,0,0.6);
+  padding:4px 0;
+  font-size:14px;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
 /* GAME SCREEN AREA */
 #gamePage{
   display:none;
 }
 #gameArea{
   width:70%;
-  margin:20px auto;
   height:60vh;
+  margin:20px auto;
   position:relative;
   background:#111;
   border-radius:8px;
@@ -177,8 +187,7 @@ html,body{
 }
 .fullscreen-mode #sidebar,
 .fullscreen-mode .topbar,
-.fullscreen-mode #controls,
-.fullscreen-mode #gameTitle{
+.fullscreen-mode #controls{
   display:none !important;
 }
 body.game-active{
@@ -220,7 +229,6 @@ body.game-active{
 
 <!-- GAME PAGE -->
 <div class="main" id="gamePage">
-  <h1 id="gameTitle"></h1>
   <div id="gameArea">
     <iframe id="gameFrame"></iframe>
     <div id="controls">
@@ -233,7 +241,7 @@ body.game-active{
 <script>
 // Games list
 const games=[
-  {title:'Pong',image:'images/doggy.png',url:'games/pong.html',tags:['Shooter']},
+  {title:'Pong',image:'pong.jpg',url:'games/pong.html',tags:['Shooter']},
   {title:'Example Site',image:'example.jpg',url:'https://example.com',tags:[]}
 ];
 
@@ -252,10 +260,13 @@ function renderGames(search='', tagFilter=''){
       img.src=game.image;
       img.alt=game.title;
       div.appendChild(img);
+      const spanTitle=document.createElement('span');
+      spanTitle.className='title';
+      spanTitle.innerText=game.title;
+      div.appendChild(spanTitle);
       div.addEventListener('click',()=>{
         document.getElementById('mainContent').style.display='none';
         document.getElementById('gamePage').style.display='block';
-        document.getElementById('gameTitle').innerText=game.title;
         document.getElementById('gameFrame').src=game.url;
         document.body.classList.add('game-active'); // prevent scroll
       });
