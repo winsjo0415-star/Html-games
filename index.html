@@ -4,347 +4,164 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hype Html — Games</title>
-<!-- Google Font for rounded letters -->
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-    --side-collapsed:60px;
-    --side-expanded:260px;
-    --topbar-height:64px;
-    --accent:#5b6cff;
-    --bg-main:#0f1724; /* dark main background */
-    --bg-side:#111111; /* left menu & top bar */
-    --muted:#9aa7bf;
+  --side-collapsed:60px;
+  --side-expanded:260px;
+  --topbar-height:64px;
+  --accent:#5b6cff;
+  --bg-main:#0f1724;
+  --bg-side:#111111;
+  --muted:#9aa7bf;
 }
 
 html, body {
-    margin:0;
-    height:100%;
-    font-family:'Quicksand', Arial, sans-serif;
-    font-weight:400;
-    color:#e6eef8;
-    background:var(--bg-main);
-    overflow-x:hidden;
+  margin:0;
+  height:100%;
+  font-family:'Quicksand', Arial, sans-serif;
+  color:white;
+  background:var(--bg-main);
 }
 
-/* Top Bar */
+/* Top bar */
 .topbar {
-    position:fixed;
-    left:0;
-    right:0;
-    top:0;
-    height:var(--topbar-height);
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    padding:0 1rem;
-    background:var(--bg-side);
-    box-shadow:0 2px 10px rgba(0,0,0,0.6);
-    z-index:50;
+  position:fixed; left:0; right:0; top:0;
+  height:var(--topbar-height);
+  display:flex; align-items:center; gap:1rem;
+  padding:0 1rem; background:var(--bg-side);
+  z-index:50;
 }
-.brand {
-    display:flex;
-    align-items:center;
-    gap:.6rem;
-}
-.brand .logo {
-    width:38px;
-    height:38px;
-    border-radius:8px;
-    background:linear-gradient(135deg,var(--accent),#28d0ff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    color:white;
-    font-size:14px;
-}
+.brand { display:flex; align-items:center; gap:.6rem; }
+.brand .logo { width:38px; height:38px; border-radius:8px; background:linear-gradient(135deg,var(--accent),#28d0ff); display:flex; align-items:center; justify-content:center; font-weight:700; }
 .brand .title { font-weight:700; }
-.top-search {
-    flex:1;
-    display:flex;
-    justify-content:center;
-}
-.top-search input {
-    width:60%;
-    max-width:700px;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.06);
-    padding:10px 12px;
-    border-radius:8px;
-    color:inherit;
-    outline:none;
-}
-.top-actions {
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    position:relative;
-}
-.profile-btn {
-    width:40px;
-    height:40px;
-    border-radius:8px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.04);
-    cursor:pointer;
-}
-
-/* Dropdowns */
-.dropdown, .login-panel {
-    position:absolute;
-    right:0;
-    top:calc(var(--topbar-height)+10px);
-    min-width:220px;
-    background:linear-gradient(180deg,#071026,#06111d);
-    padding:12px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.03);
-    box-shadow:0 8px 30px rgba(0,0,0,0.6);
-    display:none;
-}
+.top-search { flex:1; display:flex; justify-content:center; }
+.top-search input { width:60%; max-width:700px; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:white; outline:none; }
 
 /* Side Menu */
 .side-menu {
-    position:fixed;
-    left:0;
-    top:var(--topbar-height);
-    bottom:0;
-    width:var(--side-collapsed);
-    background:var(--bg-side);
-    overflow:hidden;
-    transition:width 260ms ease;
-    z-index:40;
-    border-right:1px solid rgba(255,255,255,0.02);
+  position:fixed; left:0; top:var(--topbar-height); bottom:0;
+  width:var(--side-collapsed); background:var(--bg-side);
+  overflow:hidden; transition:width 260ms ease;
+  border-right:1px solid rgba(255,255,255,0.02);
 }
 .side-menu:hover { width:var(--side-expanded); }
 .side-inner { display:flex; flex-direction:column; height:100%; }
-.tags-search { padding:12px; }
-.tags-list { padding:8px 12px; flex:1; overflow:auto; }
 
-/* Tag item styling */
-.tag-item {
-    height:48px;
-    display:flex;
-    align-items:center;
-    padding:0 10px;
-    margin-bottom:8px;
-    border-radius:8px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-    border:1px solid rgba(255,255,255,0.02);
-    cursor:pointer;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+/* Tag search & tags */
+.tag-search-item {
+  height:36px; display:flex; align-items:center;
+  padding:0 10px; margin:12px; border-radius:8px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02);
 }
-.tag-item.placeholder { opacity:0.25; }
+.side-menu:not(:hover) .tag-search-item input { display:none; }
+.side-menu:hover .tag-search-item input { display:inline; flex:1; border:none; background:transparent; color:white; outline:none; margin-left:4px; }
+
+.tags-list { flex:1; padding:0 12px; overflow:auto; }
+.tag-item { height:48px; display:flex; align-items:center; padding:0 10px; margin-bottom:8px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .side-menu:not(:hover) .tag-item span.full-name { display:none; }
 .side-menu:not(:hover) .tag-item span.emoji { display:inline; }
 .side-menu:hover .tag-item span.full-name { display:inline; }
 .side-menu:hover .tag-item span.emoji { margin-right:6px; }
 
-/* Tag search as emoji */
-.tag-search-item {
-    height:36px;
-    display:flex;
-    align-items:center;
-    padding:0 10px;
-    margin-bottom:8px;
-    border-radius:8px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-    border:1px solid rgba(255,255,255,0.02);
-    cursor:text;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
-.side-menu:not(:hover) .tag-search-item span.emoji { display:inline; }
-.side-menu:not(:hover) .tag-search-item input { display:none; }
-.side-menu:hover .tag-search-item span.emoji { margin-right:6px; }
-.side-menu:hover .tag-search-item input { display:inline; flex:1; border:none; background:transparent; color:inherit; outline:none; margin-left:4px; }
-
 /* Main content */
 .main {
-    margin-top:var(--topbar-height);
-    margin-left:var(--side-collapsed);
-    transition:margin-left 260ms ease;
-    padding:24px;
+  margin-top:var(--topbar-height);
+  margin-left:var(--side-collapsed);
+  padding:24px;
+  transition:margin-left 260ms ease;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;
 }
 .side-menu:hover ~ .main { margin-left:var(--side-expanded); }
+
 .game-tile {
-    width:220px;
-    height:220px;
-    margin:12px;
-    display:inline-block;
-    position:relative;
-    cursor:pointer;
-    border-radius:8px;
-    overflow:hidden;
-    background:#222;
+  position:relative;
+  cursor:pointer;
+  border-radius:8px;
+  overflow:hidden;
+  background:#111;
 }
 .game-tile img {
-    width:100%;
-    height:170px;
-    object-fit:cover;
+  width:100%;
+  display:block;
 }
 .game-title {
-    position:absolute;
-    bottom:0;
-    width:100%;
-    background:rgba(0,0,0,0.6);
-    text-align:center;
-    color:white;
-    font-size:16px;
-    padding:4px 0;
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  padding:4px 8px;
+  background:rgba(0,0,0,0.7);
+  text-align:center;
+  font-weight:600;
 }
 
-/* Game page styles */
-#gameArea {
-    width:80%;
-    max-width:1200px;
-    margin:20px auto;
-    background:#111;
-    border-radius:8px;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-#gameFrame {
-    width:100%;
-    height:auto;
-    max-height:80vh;
-    border:none;
-    display:block;
-}
-
-/* Buttons below game */
-.game-controls {
-    width:80%;
-    max-width:1200px;
-    margin:10px auto;
-    display:flex;
-    justify-content:space-between;
-}
-.game-controls button {
-    padding:8px 16px;
-    border-radius:6px;
-    border:none;
-    cursor:pointer;
-    background:var(--accent);
-    color:white;
-    font-weight:bold;
-}
-
-/* Responsive */
-@media(max-width:720px) {
-    .top-search input { width:90%; }
-    .side-menu:hover { width:200px; }
-    .side-menu { width:54px; }
-    .main { margin-left:54px; }
-}
+/* Scrollbar hidden for tags */
+.tags-list::-webkit-scrollbar { display:none; }
+.tags-list { -ms-overflow-style:none; scrollbar-width:none; }
 </style>
 </head>
 <body>
 
-<!-- Top Bar -->
 <header class="topbar">
-<div class="brand">
+  <div class="brand">
     <div class="logo">HH</div>
     <div class="title">Hype Html</div>
-</div>
-<div class="top-search">
-    <input id="gameSearch" placeholder="Search for games" onkeyup="filterGames()">
-</div>
-<div class="top-actions">
-    <button id="loginBtn">Log in</button>
-    <button id="profileBtn" class="profile-btn" style="display:none">👤</button>
-    <div class="dropdown" id="profileMenu"><div id="timeOnline">Time online: 0s</div></div>
-    <div class="login-panel" id="loginPanel"><div class="google-btn">Sign in with Google</div></div>
-</div>
+  </div>
+  <div class="top-search">
+    <input id="gameSearch" placeholder="Search for games">
+  </div>
 </header>
 
-<!-- Side Menu -->
 <nav class="side-menu" id="sideMenu">
-<div class="side-inner">
-    <div class="tags-search">
-        <div class="tag-search-item">
-            <span class="emoji">🔍</span>
-            <input id="tagSearch" placeholder="search for tags" onkeyup="filterTags()">
-        </div>
+  <div class="side-inner">
+    <div class="tag-search-item">
+      <span class="emoji">🔍</span>
+      <input id="tagSearch" placeholder="search for tags">
     </div>
-    <div class="tags-list">
-        <ul id="tagsUl"></ul>
+    <div class="tags-list" id="tagsUl">
+      <!-- Example tag -->
+      <div class="tag-item"><span class="emoji">🔫</span><span class="full-name">Shooter</span></div>
     </div>
-</div>
+  </div>
 </nav>
 
-<!-- Main Content -->
-<main class="main" id="mainContent">
-<h1>Welcome to Hype Html</h1>
-<section id="gamesArea">
-    <!-- Example game tile -->
-    <div class="game-tile" data-title="Pong" data-tags="shooter" onclick="window.location.href='games/pong.html'">
-        <img src="images/doggy.png">
-        <div class="game-title">Pong</div>
-    </div>
-</section>
+<main class="main" id="gamesArea">
+  <!-- Pong Game Tile -->
+  <div class="game-tile" onclick="openGame('pong')">
+    <img src="images/pong.png" alt="Pong">
+    <div class="game-title">Pong</div>
+  </div>
 </main>
 
 <script>
-// Sample tags
-const tagsUl=document.getElementById('tagsUl');
-const tags=[{name:'Shooter',emoji:'🔫'}];
-for(let i=1;i<20;i++) tags.push({name:'',emoji:''});
-function renderTags(){tagsUl.innerHTML='';tags.forEach(t=>{
-    const li=document.createElement('li');
-    li.className='tag-item'+(t.name?'':' placeholder');
-    li.innerHTML=`<span class="emoji">${t.emoji||' '}</span><span class="full-name">${t.name||' '}</span>`;
-    li.addEventListener('click',()=>{if(t.name)alert('Clicked tag: '+t.name);});
-    tagsUl.appendChild(li);
-});}
-renderTags();
+// Game search
+const gameSearch = document.getElementById('gameSearch');
+gameSearch.addEventListener('input', ()=>{
+  const q = gameSearch.value.toLowerCase();
+  document.querySelectorAll('.game-tile').forEach(tile=>{
+    const title = tile.querySelector('.game-title').innerText.toLowerCase();
+    tile.style.display = title.includes(q) ? 'block' : 'none';
+  });
+});
 
 // Tag search
-function filterTags(){
-    const q=document.getElementById('tagSearch').value.toLowerCase();
-    const tiles=document.querySelectorAll('.game-tile');
-    tiles.forEach(tile=>{
-        const tags=tile.getAttribute('data-tags').toLowerCase();
-        tile.style.display=tags.includes(q)?'inline-block':'none';
-    });
-}
-
-// Game search
-function filterGames(){
-    const q=document.getElementById('gameSearch').value.toLowerCase();
-    const tiles=document.querySelectorAll('.game-tile');
-    tiles.forEach(tile=>{
-        const title=tile.getAttribute('data-title').toLowerCase();
-        tile.style.display=title.includes(q)?'inline-block':'none';
-    });
-}
-
-// Login/Profile logic
-let loggedIn=false;
-const loginBtn=document.getElementById('loginBtn');
-const profileBtn=document.getElementById('profileBtn');
-const loginPanel=document.getElementById('loginPanel');
-const profileMenu=document.getElementById('profileMenu');
-let onlineTime=0;
-let interval;
-loginBtn.addEventListener('click',()=>{loginPanel.classList.toggle('show');});
-document.querySelector('.google-btn').addEventListener('click',()=>{
-    loggedIn=true;
-    loginPanel.classList.remove('show');
-    loginBtn.style.display='none';
-    profileBtn.style.display='inline-flex';
-    interval=setInterval(()=>{onlineTime+=5;document.getElementById('timeOnline').innerText='Time online: '+onlineTime+'s';},5000);
+const tagSearch = document.getElementById('tagSearch');
+tagSearch.addEventListener('input', ()=>{
+  const q = tagSearch.value.toLowerCase();
+  document.querySelectorAll('.tag-item').forEach(tag=>{
+    const name = tag.querySelector('.full-name').innerText.toLowerCase();
+    tag.style.display = name.includes(q) ? 'flex' : 'none';
+  });
 });
-profileBtn.addEventListener('click',()=>{profileMenu.classList.toggle('show');});
+
+// Open game
+function openGame(game){
+  window.location.href = `games/${game}.html`;
+}
 </script>
+
 </body>
 </html>
