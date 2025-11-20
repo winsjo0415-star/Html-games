@@ -122,11 +122,11 @@ body{
   display:block;
 }
 .muted{color:#9aa7bf;font-size:13px;}
-/* GAME SCREEN AREA (smaller for ads) */
+/* GAME SCREEN AREA */
 #gameArea{
-  width:70%; /* smaller width */
+  width:70%;
   margin:20px auto;
-  height:60vh; /* smaller height */
+  height:60vh;
   position:relative;
   background:#111;
   border-radius:8px;
@@ -200,19 +200,22 @@ body{
   <input type="text" id="gameSearch" placeholder="Search for games" class="top-search">
 </div>
 
-<!-- MAIN CONTENT -->
-<div class="main">
+<!-- MAIN HUB -->
+<div class="main" id="mainContent">
   <h1>Welcome to Hype Html</h1>
   <p class="muted">Click a game to play. Can be a local HTML game or an external website.</p>
   <div class="games-grid" id="gamesArea"></div>
 </div>
 
-<!-- GAME SCREEN (hidden until click) -->
-<div id="gameArea" style="display:none">
-  <iframe id="gameFrame"></iframe>
-  <div id="controls">
-    <button id="backBtn">Back</button>
-    <button id="fullscreenBtn">Fullscreen</button>
+<!-- GAME PAGE -->
+<div class="main" id="gamePage" style="display:none">
+  <h1 id="gameTitle"></h1>
+  <div id="gameArea">
+    <iframe id="gameFrame"></iframe>
+    <div id="controls">
+      <button id="backBtn">Back</button>
+      <button id="fullscreenBtn">Fullscreen</button>
+    </div>
   </div>
 </div>
 
@@ -225,11 +228,13 @@ const games=[
 
 // Render games
 const gamesArea=document.getElementById('gamesArea');
-function renderGames(filter=''){
+function renderGames(search='', tagFilter=''){
   gamesArea.innerHTML='';
-  const q=filter.toLowerCase();
+  const q=search.toLowerCase();
   games.forEach(game=>{
-    if(game.title.toLowerCase().includes(q)){
+    const matchesSearch=game.title.toLowerCase().includes(q);
+    const matchesTag=tagFilter==='' || game.tags.includes(tagFilter);
+    if(matchesSearch && matchesTag){
       const div=document.createElement('div');
       div.className='game-tile';
       const img=document.createElement('img');
@@ -237,7 +242,9 @@ function renderGames(filter=''){
       img.alt=game.title;
       div.appendChild(img);
       div.addEventListener('click',()=>{
-        document.getElementById('gameArea').style.display='block';
+        document.getElementById('mainContent').style.display='none';
+        document.getElementById('gamePage').style.display='block';
+        document.getElementById('gameTitle').innerText=game.title;
         document.getElementById('gameFrame').src=game.url;
       });
       gamesArea.appendChild(div);
@@ -261,12 +268,21 @@ document.getElementById('tagSearch').addEventListener('input',e=>{
   });
 });
 
+// Clicking a tag filters games
+tagItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    const tag=item.dataset.tag;
+    renderGames('',tag);
+  });
+});
+
 // Game screen controls
 const backBtn=document.getElementById('backBtn');
 const fullscreenBtn=document.getElementById('fullscreenBtn');
 
 backBtn.onclick=()=>{
-  document.getElementById('gameArea').style.display='none';
+  document.getElementById('gamePage').style.display='none';
+  document.getElementById('mainContent').style.display='block';
   document.getElementById('gameFrame').src='';
 };
 
@@ -289,4 +305,3 @@ document.addEventListener('fullscreenchange',()=>{
 
 </body>
 </html>
-
