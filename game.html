@@ -134,14 +134,21 @@ body{
     color:white;
     cursor:pointer;
 }
+/* FULLSCREEN MODE */
+.fullscreen-mode #gameArea{
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+}
+.fullscreen-mode #gameFrame{
+    width:100%;
+    height:100%;
+}
 .fullscreen-mode #sidebar,
 .fullscreen-mode #topbar,
 .fullscreen-mode #controls{
     display:none !important;
-}
-.fullscreen-mode #gameArea{
-    top:0;
-    left:0;
 }
 </style>
 </head>
@@ -181,33 +188,19 @@ document.getElementById('backBtn').onclick = ()=>{
     window.location.href='index.html';
 }
 
-// Fullscreen button - immersive fullscreen
+// Fullscreen button
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 fullscreenBtn.onclick = ()=>{
-    const iframe = document.getElementById('gameFrame');
     if(!document.fullscreenElement){
-        // Request fullscreen for iframe
-        if(iframe.requestFullscreen){
-            iframe.requestFullscreen();
-        } else if(iframe.webkitRequestFullscreen){
-            iframe.webkitRequestFullscreen();
-        } else if(iframe.msRequestFullscreen){
-            iframe.msRequestFullscreen();
-        }
+        document.documentElement.requestFullscreen();
         document.body.classList.add('fullscreen-mode');
     } else {
-        if(document.exitFullscreen){
-            document.exitFullscreen();
-        } else if(document.webkitExitFullscreen){
-            document.webkitExitFullscreen();
-        } else if(document.msExitFullscreen){
-            document.msExitFullscreen();
-        }
+        if(document.exitFullscreen) document.exitFullscreen();
         document.body.classList.remove('fullscreen-mode');
     }
-}
+};
 
-// Listen for exit fullscreen (ESC) to restore UI
+// Exit fullscreen via ESC restores UI
 document.addEventListener('fullscreenchange', ()=>{
     if(!document.fullscreenElement){
         document.body.classList.remove('fullscreen-mode');
