@@ -92,7 +92,7 @@ html,body{
   display:none;
 }
 #sidebar:hover .tag-search-item input{display:inline-flex;}
-/* MAIN AREA */
+/* MAIN HUB */
 .main{
   margin-top:var(--topbar-height);
   margin-left:var(--side-collapsed);
@@ -124,6 +124,9 @@ html,body{
 }
 .muted{color:#9aa7bf;font-size:13px;}
 /* GAME SCREEN AREA */
+#gamePage{
+  display:none;
+}
 #gameArea{
   width:70%;
   margin:20px auto;
@@ -165,6 +168,8 @@ html,body{
   left:0;
   width:100vw;
   height:100vh;
+  margin:0;
+  border-radius:0;
 }
 .fullscreen-mode #gameFrame{
   width:100%;
@@ -214,7 +219,7 @@ body.game-active{
 </div>
 
 <!-- GAME PAGE -->
-<div class="main" id="gamePage" style="display:none">
+<div class="main" id="gamePage">
   <h1 id="gameTitle"></h1>
   <div id="gameArea">
     <iframe id="gameFrame"></iframe>
@@ -295,8 +300,9 @@ backBtn.onclick=()=>{
 };
 
 fullscreenBtn.onclick=()=>{
+  const gameArea=document.getElementById('gameArea');
   if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen();
+    gameArea.requestFullscreen();
     document.body.classList.add('fullscreen-mode');
   } else {
     document.exitFullscreen();
