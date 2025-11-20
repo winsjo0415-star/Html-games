@@ -14,12 +14,13 @@
   --bg-side:#141414;
   --accent:#BF80FF;
 }
-body{
+html,body{
   margin:0;
   font-family:'Quicksand',sans-serif;
   background:var(--bg-main);
   color:white;
   height:100%;
+  overflow-x:hidden;
 }
 /* TOPBAR */
 .topbar{
@@ -136,6 +137,7 @@ body{
   width:100%;
   height:100%;
   border:none;
+  display:block;
 }
 /* CONTROLS */
 #controls{
@@ -170,8 +172,12 @@ body{
 }
 .fullscreen-mode #sidebar,
 .fullscreen-mode .topbar,
-.fullscreen-mode #controls{
+.fullscreen-mode #controls,
+.fullscreen-mode #gameTitle{
   display:none !important;
+}
+body.game-active{
+  overflow:hidden;
 }
 @media(max-width:720px){
   .top-search input{width:90%;}
@@ -222,7 +228,7 @@ body{
 <script>
 // Games list
 const games=[
-  {title:'Pong',image:'images/pong.png',url:'games/pong.html',tags:['Shooter']},
+  {title:'Pong',image:'images/doggy.png',url:'games/pong.html',tags:['Shooter']},
   {title:'Example Site',image:'example.jpg',url:'https://example.com',tags:[]}
 ];
 
@@ -246,6 +252,7 @@ function renderGames(search='', tagFilter=''){
         document.getElementById('gamePage').style.display='block';
         document.getElementById('gameTitle').innerText=game.title;
         document.getElementById('gameFrame').src=game.url;
+        document.body.classList.add('game-active'); // prevent scroll
       });
       gamesArea.appendChild(div);
     }
@@ -284,6 +291,7 @@ backBtn.onclick=()=>{
   document.getElementById('gamePage').style.display='none';
   document.getElementById('mainContent').style.display='block';
   document.getElementById('gameFrame').src='';
+  document.body.classList.remove('game-active');
 };
 
 fullscreenBtn.onclick=()=>{
