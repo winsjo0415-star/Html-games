@@ -151,6 +151,7 @@ html,body{
   height:100%;
   border:none;
   display:block;
+  overflow:hidden; /* Prevent iframe scrollbars */
 }
 /* CONTROLS */
 #controls{
@@ -191,7 +192,7 @@ html,body{
   display:none !important;
 }
 body.game-active{
-  overflow:hidden;
+  overflow:hidden; /* Prevent scrolling while game active */
 }
 @media(max-width:720px){
   .top-search input{width:90%;}
@@ -230,7 +231,7 @@ body.game-active{
 <!-- GAME PAGE -->
 <div class="main" id="gamePage">
   <div id="gameArea">
-    <iframe id="gameFrame"></iframe>
+    <iframe id="gameFrame" scrolling="no" frameborder="0"></iframe>
     <div id="controls">
       <button id="backBtn">Back</button>
       <button id="fullscreenBtn">Fullscreen</button>
@@ -241,7 +242,7 @@ body.game-active{
 <script>
 // Games list
 const games=[
-  {title:'Pong',image:'pong.jpg',url:'games/pong.html',tags:['Shooter']},
+  {title:'Pong',image:'images/doggy.png',url:'games/pong.html',tags:['Shooter']},
   {title:'Example Site',image:'example.jpg',url:'https://example.com',tags:[]}
 ];
 
@@ -267,8 +268,11 @@ function renderGames(search='', tagFilter=''){
       div.addEventListener('click',()=>{
         document.getElementById('mainContent').style.display='none';
         document.getElementById('gamePage').style.display='block';
-        document.getElementById('gameFrame').src=game.url;
-        document.body.classList.add('game-active'); // prevent scroll
+        const iframe=document.getElementById('gameFrame');
+        iframe.src=game.url;
+        iframe.setAttribute('scrolling','no');
+        iframe.setAttribute('frameborder','0');
+        document.body.classList.add('game-active'); // prevent page scroll
       });
       gamesArea.appendChild(div);
     }
@@ -330,3 +334,4 @@ document.addEventListener('fullscreenchange',()=>{
 
 </body>
 </html>
+
