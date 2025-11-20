@@ -101,7 +101,7 @@ body{
 #sidebar:hover ~ .main{margin-left:var(--side-expanded);}
 .games-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
   gap:16px;
 }
 .game-tile{
@@ -122,6 +122,57 @@ body{
   display:block;
 }
 .muted{color:#9aa7bf;font-size:13px;}
+/* GAME SCREEN AREA (smaller for ads) */
+#gameArea{
+  width:70%; /* smaller width */
+  margin:20px auto;
+  height:60vh; /* smaller height */
+  position:relative;
+  background:#111;
+  border-radius:8px;
+  overflow:hidden;
+}
+#gameFrame{
+  width:100%;
+  height:100%;
+  border:none;
+}
+/* CONTROLS */
+#controls{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  background:#222;
+  padding:8px 12px;
+  z-index:5;
+}
+#controls button{
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+/* FULLSCREEN MODE */
+.fullscreen-mode #gameArea{
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+}
+.fullscreen-mode #gameFrame{
+  width:100%;
+  height:100%;
+}
+.fullscreen-mode #sidebar,
+.fullscreen-mode .topbar,
+.fullscreen-mode #controls{
+  display:none !important;
+}
 @media(max-width:720px){
   .top-search input{width:90%;}
   #sidebar{width:54px;}
@@ -136,9 +187,9 @@ body{
 <div id="sidebar">
   <div class="tag-search-item">
     <span class="emoji">🔍</span>
-    <input type="text" placeholder="search for tags">
+    <input type="text" id="tagSearch" placeholder="search for tags">
   </div>
-  <div class="sidebar-item">
+  <div class="sidebar-item" data-tag="Shooter">
     <span class="emoji">🔫</span>
     <span class="label">Shooter</span>
   </div>
@@ -146,41 +197,96 @@ body{
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <input type="text" placeholder="Search for games" class="top-search">
+  <input type="text" id="gameSearch" placeholder="Search for games" class="top-search">
 </div>
 
 <!-- MAIN CONTENT -->
 <div class="main">
   <h1>Welcome to Hype Html</h1>
   <p class="muted">Click a game to play. Can be a local HTML game or an external website.</p>
-  <div class="games-grid" id="gamesArea">
-    <!-- Game tiles will be added here by JS -->
+  <div class="games-grid" id="gamesArea"></div>
+</div>
+
+<!-- GAME SCREEN (hidden until click) -->
+<div id="gameArea" style="display:none">
+  <iframe id="gameFrame"></iframe>
+  <div id="controls">
+    <button id="backBtn">Back</button>
+    <button id="fullscreenBtn">Fullscreen</button>
   </div>
 </div>
 
 <script>
-// List of games (HTML file or external website)
+// Games list
 const games=[
-  {title:'Pong',image:'images/doggy.png',url:'games/pong.html'},
-  {title:'Rymd Attack',image:'images/rymdattack.png',url:'https://scratch.mit.edu/projects/1170764236/fullscreen/'}
+  {title:'Pong',image:'pong.jpg',url:'games/pong.html',tags:['Shooter']},
+  {title:'Example Site',image:'example.jpg',url:'https://example.com',tags:[]}
 ];
 
-// Add game tiles
+// Render games
 const gamesArea=document.getElementById('gamesArea');
-games.forEach(game=>{
-  const div=document.createElement('div');
-  div.className='game-tile';
-  const img=document.createElement('img');
-  img.src=game.image;
-  img.alt=game.title;
-  div.appendChild(img);
-  div.addEventListener('click',()=>{
-    // Open game.html with query parameter
-    window.location.href=`game.html?game=${encodeURIComponent(game.url)}`;
+function renderGames(filter=''){
+  gamesArea.innerHTML='';
+  const q=filter.toLowerCase();
+  games.forEach(game=>{
+    if(game.title.toLowerCase().includes(q)){
+      const div=document.createElement('div');
+      div.className='game-tile';
+      const img=document.createElement('img');
+      img.src=game.image;
+      img.alt=game.title;
+      div.appendChild(img);
+      div.addEventListener('click',()=>{
+        document.getElementById('gameArea').style.display='block';
+        document.getElementById('gameFrame').src=game.url;
+      });
+      gamesArea.appendChild(div);
+    }
   });
-  gamesArea.appendChild(div);
+}
+renderGames();
+
+// Game search bar
+document.getElementById('gameSearch').addEventListener('input',e=>{
+  renderGames(e.target.value);
+});
+
+// Tag search bar
+const tagItems=document.querySelectorAll('.sidebar-item');
+document.getElementById('tagSearch').addEventListener('input',e=>{
+  const val=e.target.value.toLowerCase();
+  tagItems.forEach(item=>{
+    const tag=item.dataset.tag.toLowerCase();
+    item.style.display=tag.includes(val)?'flex':'none';
+  });
+});
+
+// Game screen controls
+const backBtn=document.getElementById('backBtn');
+const fullscreenBtn=document.getElementById('fullscreenBtn');
+
+backBtn.onclick=()=>{
+  document.getElementById('gameArea').style.display='none';
+  document.getElementById('gameFrame').src='';
+};
+
+fullscreenBtn.onclick=()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+    document.body.classList.add('fullscreen-mode');
+  } else {
+    document.exitFullscreen();
+    document.body.classList.remove('fullscreen-mode');
+  }
+};
+
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement){
+    document.body.classList.remove('fullscreen-mode');
+  }
 });
 </script>
 
 </body>
 </html>
+
