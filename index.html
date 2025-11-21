@@ -1,166 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hype Html — Games</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --side-collapsed:60px;
-  --side-expanded:260px;
-  --topbar-height:64px;
-  --accent:#5b6cff;
-  --bg-main:#0f1724;
-  --bg-side:#111111;
-  --muted:#9aa7bf;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hype HTML</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-html, body {
-  margin:0;
-  height:100%;
-  font-family:'Quicksand', Arial, sans-serif;
-  color:white;
-  background:var(--bg-main);
-}
+        /* LEFT SIDEBAR */
+        .sidebar {
+            width: 70px;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 15px;
+            gap: 25px;
+            color: white;
+            font-size: 30px;
+        }
 
-/* Top bar */
-.topbar {
-  position:fixed; left:0; right:0; top:0;
-  height:var(--topbar-height);
-  display:flex; align-items:center; gap:1rem;
-  padding:0 1rem; background:var(--bg-side);
-  z-index:50;
-}
-.brand { display:flex; align-items:center; gap:.6rem; }
-.brand .logo { width:38px; height:38px; border-radius:8px; background:linear-gradient(135deg,var(--accent),#28d0ff); display:flex; align-items:center; justify-content:center; font-weight:700; }
-.brand .title { font-weight:700; }
-.top-search { flex:1; display:flex; justify-content:center; }
-.top-search input { width:60%; max-width:700px; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:white; outline:none; }
+        .sidebar div {
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-/* Side Menu */
-.side-menu {
-  position:fixed; left:0; top:var(--topbar-height); bottom:0;
-  width:var(--side-collapsed); background:var(--bg-side);
-  overflow:hidden; transition:width 260ms ease;
-  border-right:1px solid rgba(255,255,255,0.02);
-}
-.side-menu:hover { width:var(--side-expanded); }
-.side-inner { display:flex; flex-direction:column; height:100%; }
+        .sidebar div:hover {
+            transform: scale(1.2);
+        }
 
-/* Tag search & tags */
-.tag-search-item {
-  height:36px; display:flex; align-items:center;
-  padding:0 10px; margin:12px; border-radius:8px;
-  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02);
-}
-.side-menu:not(:hover) .tag-search-item input { display:none; }
-.side-menu:hover .tag-search-item input { display:inline; flex:1; border:none; background:transparent; color:white; outline:none; margin-left:4px; }
+        /* MAIN AREA */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #111;
+            color: white;
+            height: 100vh;
+        }
 
-.tags-list { flex:1; padding:0 12px; overflow:auto; }
-.tag-item { height:48px; display:flex; align-items:center; padding:0 10px; margin-bottom:8px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.side-menu:not(:hover) .tag-item span.full-name { display:none; }
-.side-menu:not(:hover) .tag-item span.emoji { display:inline; }
-.side-menu:hover .tag-item span.full-name { display:inline; }
-.side-menu:hover .tag-item span.emoji { margin-right:6px; }
+        /* TOP BAR */
+        .topbar {
+            height: 60px;
+            background: #000;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-/* Main content */
-.main {
-  margin-top:var(--topbar-height);
-  margin-left:var(--side-collapsed);
-  padding:24px;
-  transition:margin-left 260ms ease;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:16px;
-}
-.side-menu:hover ~ .main { margin-left:var(--side-expanded); }
+        /* GAME GRID */
+        .games {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-.game-tile {
-  position:relative;
-  cursor:pointer;
-  border-radius:8px;
-  overflow:hidden;
-  background:#111;
-}
-.game-tile img {
-  width:100%;
-  display:block;
-}
-.game-title {
-  position:absolute;
-  bottom:0;
-  left:0;
-  width:100%;
-  padding:4px 8px;
-  background:rgba(0,0,0,0.7);
-  text-align:center;
-  font-weight:600;
-}
+        /* GAME TILE */
+        .game-tile {
+            position: relative;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-/* Scrollbar hidden for tags */
-.tags-list::-webkit-scrollbar { display:none; }
-.tags-list { -ms-overflow-style:none; scrollbar-width:none; }
-</style>
+        .game-tile:hover {
+            transform: scale(1.05);
+        }
+
+        .game-tile img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        /* GAME NAME ON HOVER */
+        .game-name-hover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
+            width: 100%;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .game-tile:hover .game-name-hover {
+            opacity: 1;
+        }
+
+        /* SEARCH + TAG FILTER */
+        .search-area {
+            display: flex;
+            padding: 10px 20px;
+            gap: 20px;
+            background: #000;
+        }
+
+        .search-area input {
+            padding: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="logo">HH</div>
-    <div class="title">Hype Html</div>
-  </div>
-  <div class="top-search">
-    <input id="gameSearch" placeholder="Search for games">
-  </div>
-</header>
-
-<nav class="side-menu" id="sideMenu">
-  <div class="side-inner">
-    <div class="tag-search-item">
-      <span class="emoji">🔍</span>
-      <input id="tagSearch" placeholder="search for tags">
+    <!-- LEFT SIDEBAR WITH EMOJIS -->
+    <div class="sidebar">
+        <div>🏠</div>
+        <div>🎮</div>
+        <div>⭐</div>
+        <div>⚙️</div>
     </div>
-    <div class="tags-list" id="tagsUl">
-      <!-- Example tag -->
-      <div class="tag-item"><span class="emoji">🔫</span><span class="full-name">Shooter</span></div>
-    </div>
-  </div>
-</nav>
 
-<main class="main" id="gamesArea">
-  <!-- Pong Game Tile -->
-  <div class="game-tile" onclick="openGame('pong')">
-    <img src="images/pong.png" alt="Pong">
-    <div class="game-title">Pong</div>
-  </div>
-</main>
+    <div class="main">
+        <div class="topbar">Hype HTML</div>
+
+        <div class="search-area">
+            <input id="searchInput" placeholder="Search games...">
+            <input id="tagInput" placeholder="Search tags...">
+        </div>
+
+        <div class="games" id="gameList">
+
+            <!-- EXAMPLE GAME (PONG) -->
+            <div class="game-tile" data-name="pong" data-tags="classic ball arcade"
+                 onclick="openGame('pong.html', 'Pong')">
+                <img src="images/pong.png">
+                <div class="game-name-hover">Pong</div>
+            </div>
+
+        </div>
+    </div>
 
 <script>
-// Game search
-const gameSearch = document.getElementById('gameSearch');
-gameSearch.addEventListener('input', ()=>{
-  const q = gameSearch.value.toLowerCase();
-  document.querySelectorAll('.game-tile').forEach(tile=>{
-    const title = tile.querySelector('.game-title').innerText.toLowerCase();
-    tile.style.display = title.includes(q) ? 'block' : 'none';
-  });
-});
+    // Search by game name
+    document.getElementById("searchInput").addEventListener("input", function () {
+        let value = this.value.toLowerCase();
+        document.querySelectorAll(".game-tile").forEach(tile => {
+            tile.style.display = tile.dataset.name.includes(value) ? "block" : "none";
+        });
+    });
 
-// Tag search
-const tagSearch = document.getElementById('tagSearch');
-tagSearch.addEventListener('input', ()=>{
-  const q = tagSearch.value.toLowerCase();
-  document.querySelectorAll('.tag-item').forEach(tag=>{
-    const name = tag.querySelector('.full-name').innerText.toLowerCase();
-    tag.style.display = name.includes(q) ? 'flex' : 'none';
-  });
-});
+    // Search by tag
+    document.getElementById("tagInput").addEventListener("input", function () {
+        let value = this.value.toLowerCase();
+        document.querySelectorAll(".game-tile").forEach(tile => {
+            tile.style.display = tile.dataset.tags.includes(value) ? "block" : "none";
+        });
+    });
 
-// Open game
-function openGame(game){
-  window.location.href = `games/${game}.html`;
-}
+    // Open game file
+    function openGame(file, gameName) {
+        window.location.href = "games/" + file + "?name=" + encodeURIComponent(gameName);
+    }
 </script>
 
 </body>
